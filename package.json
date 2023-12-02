@@ -1,0 +1,56 @@
+{
+  "name": "nghiempt.me",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "npx prisma generate && next build",
+    "start": "next start",
+    "lint": "next lint",
+    "init-husky": "npx husky install && npx husky add .husky/pre-commit \"npx --no-install lint-staged\"",
+    "prisma-client-sync": "npx prisma generate",
+    "dev-db-pull-closed": "dotenv -e .env.development -- npx prisma db pull",
+    "prod-db-pull-closed": "dotenv -e .env.production -- npx prisma db pull",
+    "dev-db-push": "dotenv -e .env.development -- npx prisma db push",
+    "prod-db-push": "dotenv -e .env.production -- npx prisma db push"
+  },
+  "dependencies": {
+    "@douyinfe/semi-icons": "2.41.2",
+    "@douyinfe/semi-ui": "2.41.0",
+    "@next-auth/prisma-adapter": "^1.0.7",
+    "@semi-bot/semi-theme-test": "^0.0.0",
+    "@types/node": "20.4.9",
+    "@types/react": "18.2.20",
+    "@types/react-dom": "18.2.7",
+    "autoprefixer": "10.4.14",
+    "dotenv-cli": "7.2.1",
+    "http-status-codes": "2.2.0",
+    "next": "13.4.13",
+    "next-auth": "^4.23.1",
+    "postcss": "8.4.27",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "tailwindcss": "3.3.3",
+    "typescript": "5.1.6"
+  },
+  "devDependencies": {
+    "@douyinfe/semi-next": "2.41.0",
+    "@types/react-beautiful-dnd": "^13.1.4",
+    "eslint": "8.46.0",
+    "eslint-config-next": "13.4.12",
+    "eslint-config-prettier": "8.9.0",
+    "husky": "8.0.3",
+    "lint-staged": "13.2.3",
+    "prettier": "3.0.0",
+    "prisma": "^5.1.1"
+  },
+  "lint-staged": {
+    "**/*.{js,jsx,ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "**/*.css": [
+      "prettier --write"
+    ]
+  }
+}
