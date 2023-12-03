@@ -32,8 +32,8 @@ const apps = [
     developer: 'Facebook Inc.',
     link: 'https://facebook.com',
     status: 1,
-    dataSafety: 'dataSafety',
-    privacyPolicy: 'privacyPolicy',
+    dataSafety: 'https://play.google.com/store/apps/datasafety?id=com.facebook.katana&hl=en_US',
+    privacyPolicy: 'https://www.facebook.com/privacy/policy/?entry_point=data_policy_redirect&entry=0',
   },
   // youtube
   {
@@ -48,7 +48,7 @@ const apps = [
     developer: 'Google LLC',
     link: 'https://youtube.com',
     status: 2,
-    dataSafety: 'dataSafety',
+    dataSafety: 'https://play.google.com/store/apps/datasafety?id=com.facebook.katana&hl=en_US',
     privacyPolicy: 'privacyPolicy',
   },
   // telegram
@@ -64,7 +64,7 @@ const apps = [
     developer: 'Telegram FZ-LLC',
     link: 'https://telegram.org/',
     status: 1,
-    dataSafety: 'dataSafety',
+    dataSafety: 'https://play.google.com/store/apps/datasafety?id=com.facebook.katana&hl=en_US',
     privacyPolicy: 'privacyPolicy',
   },
   // instagram
@@ -80,7 +80,7 @@ const apps = [
     developer: 'Facebook',
     link: 'https://instagram.com/',
     status: 1,
-    dataSafety: 'dataSafety',
+    dataSafety: 'https://play.google.com/store/apps/datasafety?id=com.facebook.katana&hl=en_US',
     privacyPolicy: 'privacyPolicy',
   },
   // tiktok
@@ -96,7 +96,7 @@ const apps = [
     developer: 'TikTok Pte. Ltd.',
     link: 'https://tiktok.com/',
     status: 1,
-    dataSafety: 'dataSafety',
+    dataSafety: 'https://play.google.com/store/apps/datasafety?id=com.facebook.katana&hl=en_US',
     privacyPolicy: 'privacyPolicy',
   },
 ];

@@ -1,6 +1,5 @@
 'use client';
 
-import { callApi } from '@/utils/api/apps.api';
 import { fake } from '@/utils/fake';
 import {Image} from '@douyinfe/semi-ui';
 import React, {useEffect, useState} from 'react';
@@ -9,11 +8,8 @@ export const HomePage = () => {
   const [data, setData] = useState<any>(null);
 
   const goToDetail = async (item: any) => {
-    const res = await callApi(item);
-    console.log(res);
-    
-    // localStorage.setItem('category', JSON.stringify(item));
-    // window.location.href = `/detail`;
+    localStorage.setItem('category', JSON.stringify(item));
+    window.location.href = `/detail`;
   };
 
   const init = async () => {
