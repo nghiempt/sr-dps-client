@@ -24,4 +24,7 @@ export const showToastFail = (message: String, duration: any) => {
     content: message,
     duration: duration,
   });
+  setTimeout(() => {
+    Toast.destroyAll();
+  }, 3000);
 };

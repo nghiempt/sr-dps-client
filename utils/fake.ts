@@ -35,7 +35,6 @@ const apps = [
     dataSafety: 'https://play.google.com/store/apps/datasafety?id=com.facebook.katana&hl=en_US',
     privacyPolicy: 'https://www.facebook.com/privacy/policy/?entry_point=data_policy_redirect&entry=0',
   },
-  // youtube
   {
     id: 2,
     name: 'Youtube',
@@ -51,7 +50,6 @@ const apps = [
     dataSafety: 'https://play.google.com/store/apps/datasafety?id=com.facebook.katana&hl=en_US',
     privacyPolicy: 'privacyPolicy',
   },
-  // telegram
   {
     id: 3,
     name: 'Telegram',
@@ -67,7 +65,6 @@ const apps = [
     dataSafety: 'https://play.google.com/store/apps/datasafety?id=com.facebook.katana&hl=en_US',
     privacyPolicy: 'privacyPolicy',
   },
-  // instagram
   {
     id: 4,
     name: 'Instagram',
@@ -83,7 +80,6 @@ const apps = [
     dataSafety: 'https://play.google.com/store/apps/datasafety?id=com.facebook.katana&hl=en_US',
     privacyPolicy: 'privacyPolicy',
   },
-  // tiktok
   {
     id: 5,
     name: 'TikTok',
