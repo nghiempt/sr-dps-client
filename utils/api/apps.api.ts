@@ -3,11 +3,10 @@ import {fake} from '../fake';
 
 async function getAllCategories() {
   try {
-    // const response = await fetch(ApiUrl.GET_ALL_CATEGORIES);
-    // if (!response.ok) {
-    //   throw new Error('Failed to create');
-    // }
-    return fake.categories;
+    const response = await fetch(ApiUrl.GET_ALL_CATEGORIES);
+    if (!response.ok) {
+      throw new Error('Failed to create');
+    }
   } catch (error: any) {
     return [];
   }

@@ -1,6 +1,7 @@
 'use client';
 
 import {APIService} from '@/utils/api/apps.api';
+import {ApiUrl} from '@/utils/apiUrl';
 import {fake} from '@/utils/fake';
 import {Image} from '@douyinfe/semi-ui';
 import React, {useEffect, useState} from 'react';
@@ -14,8 +15,10 @@ export const HomePage = () => {
   };
 
   const init = async () => {
-    const res = await APIService.getAllCategories();
-    setData(res);
+    const res: any = await fetch(ApiUrl.GET_ALL_CATEGORIES);
+    await res.json().then((data: any) => {
+      setData(data.data);
+    });
   };
 
   useEffect(() => {
@@ -85,7 +88,7 @@ export const HomePage = () => {
         </header>
 
         <main className="flex-grow container mx-auto px-4 py-4 font-sans text-2xl mt-10">
-          <h2 className="font-bold text-[#4F4F4F] ml-[346px] mb-5">
+          <h2 className="font-bold text-[#4F4F4F] ml-[160px] mb-10">
             Chọn Danh Mục
           </h2>
 
@@ -100,11 +103,11 @@ export const HomePage = () => {
             </div>
           ) : (
             <section className="bg-white mt-2">
-              <div className="flex justify-center">
+              <div className="flex justify-center flex-wrap gap-[30px]">
                 {data?.map((item: any, index: any) => (
                   <a
                     key={index}
-                    className='hover:opacity-80 transition duration-300 ease-in-out cursor-pointer'
+                    className="hover:opacity-80 transition duration-300 ease-in-out cursor-pointer"
                     onClick={(e) => {
                       e.preventDefault();
                       goToDetail(item);
@@ -118,8 +121,8 @@ export const HomePage = () => {
                       }}
                     >
                       <Image
-                        src={item?.thumbnail}
-                        alt={item?.thumbnail}
+                        src={'https://fiddle.skia.org/i/@skpaint_shader_gpu.png'}
+                        alt={'https://fiddle.skia.org/i/'}
                         className="w-full h-full object-cover"
                         preview={false}
                       />
@@ -192,8 +195,8 @@ export const HomePage = () => {
                         </svg>
                       </div>
                       <div className="absolute top-5 left-7">
-                        <h2 className="font-bold text-white">{item?.name}</h2>
-                        <h2 className="font-bold text-white">5/5</h2>
+                        <h2 className="font-bold text-white">{item?.category_name}</h2>
+                        <p className="font-bold text-sm text-white">{item?.total_app} apps</p>
                       </div>
                     </div>
                   </a>

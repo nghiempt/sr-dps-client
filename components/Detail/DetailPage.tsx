@@ -3,18 +3,29 @@
 import {fake} from '@/utils/fake';
 import {convertNumber} from '@/utils/helpers';
 import React, {useEffect, useState} from 'react';
-import {Image, Toast} from '@douyinfe/semi-ui';
+import {Button, Image, Toast} from '@douyinfe/semi-ui';
 import {APIService} from '@/utils/api/apps.api';
 import {showToastFail} from '@/utils/showToast';
+import {ModalLogin} from '../Modal/ModalLogin';
+import {ApiUrl} from '@/utils/apiUrl';
 
 export const DetailPage = () => {
+  const categoryStore = localStorage.getItem('category');
+  const appOrderStrore = localStorage.getItem('appOrder');
+
   const [category, setCategory] = useState<any>(null);
   const [data, setData] = useState<any>([]);
   const [currentApp, setCurrentApp] = useState<any>(null);
 
+  const [showModalLogin, setShowModalLogin] = useState<any>(false);
+
   const [username, setUsername] = useState<any>('');
   const [email, setEmail] = useState<any>('');
   const [option, setOption] = useState<any>('');
+
+  const handleShowModalLogin = () => {
+    setShowModalLogin(!showModalLogin);
+  };
 
   const submit = async () => {
     if (!validate()) {
@@ -27,6 +38,7 @@ export const DetailPage = () => {
       currentApp: currentApp?.id,
     };
     let appOrder = parseInt(localStorage.getItem('appOrder') || '0');
+    setOption('');
     if (appOrder < data.length - 1) {
       appOrder = appOrder + 1;
       localStorage.setItem('appOrder', JSON.stringify(appOrder));
@@ -38,37 +50,42 @@ export const DetailPage = () => {
   };
 
   const validate = () => {
-    if (!username) {
-      showToastFail('Vui lòng điền tên của bạn', 3000);
-      return false;
-    }
-    if (!email) {
-      showToastFail('Vui lòng điền email của bạn', 3000);
-      return false;
-    }
-    if (!option) {
-      showToastFail('Vui lòng chọn ý kiến của bạn', 3000);
-      return false;
-    }
+    // if (!username) {
+    //   showToastFail('Vui lòng điền tên của bạn', 3000);
+    //   return false;
+    // }
+    // if (!email) {
+    //   showToastFail('Vui lòng điền email của bạn', 3000);
+    //   return false;
+    // }
+    // if (!option) {
+    //   showToastFail('Vui lòng chọn ý kiến của bạn', 3000);
+    //   return false;
+    // }
     return true;
   };
 
   const init = async () => {
-    const category = localStorage.getItem('category');
     if (category) {
-      setCategory(JSON.parse(category));
+      setCategory(JSON.parse(categoryStore || ''));
     }
     localStorage.setItem('appOrder', JSON.stringify(0));
-    const res = await APIService.getAppByCategoryID(1);
-    setData(res);
-    setCurrentApp(res[0]);
+
+    const res: any = await fetch(
+      `${ApiUrl.GET_APP_BY_CATEGORY_ID}${JSON.parse(categoryStore || '')
+        ?.category_id}`
+    );
+    await res.json().then((data: any) => {
+      setData(data.data);
+      setCurrentApp(data.data[0]);
+    });
   };
 
   useEffect(() => {
     init();
   }, []);
 
-  useEffect(() => {}, [data, category, currentApp]);
+  useEffect(() => {}, [data, category, currentApp, option]);
 
   return (
     <div className="h-screen w-ful">
@@ -142,7 +159,7 @@ export const DetailPage = () => {
               <div className="col-span-7">
                 <div className="grid grid-cols-10 gap-1 p-5 rounded-[20px] border border-solid border-opacity-10 bg-[#DEEBF2] bg-opacity-50">
                   <Image
-                    src={currentApp?.thumbnail}
+                    src={currentApp?.app_thumbnail}
                     alt="icon"
                     width={80}
                     height={80}
@@ -150,19 +167,21 @@ export const DetailPage = () => {
                   <div className="col-span-2 p-0">
                     <div>
                       <h4 className="text-xl font-semibold text-left text-[#4F4F4F]">
-                        {currentApp?.name}
+                        {currentApp?.app_name}
                       </h4>
                       <p className="text-lg text-left text-[#4F4F4F]">
                         {currentApp?.developer}
                       </p>
                       <p className="text-lg font-medium text-left text-[#4F4F4F]">
-                        {convertNumber(currentApp?.numberOfDownloads)}
+                        {currentApp?.number_of_downloads}
                       </p>
                     </div>
                   </div>
                   <div className="col-span-7 p-0">
                     <p className="text-lg text-left text-[#4F4F4F] text-justify">
-                      {currentApp?.description}
+                      {currentApp?.app_description.length > 300
+                        ? currentApp?.app_description.substring(0, 300) + '...'
+                        : currentApp?.app_description}
                     </p>
                   </div>
                 </div>
@@ -171,32 +190,74 @@ export const DetailPage = () => {
                     <h4 className="text-xl font-bold text-left text-[#4F4F4F] mb-4">
                       Data Safety
                     </h4>
-                    <p>{currentApp?.dataSafety}</p>
+
+                    <h6>*Data Shared*</h6>
+                    {currentApp?.app_data_safety?.data_shared?.length > 0 ? (
+                      currentApp?.app_data_safety?.data_shared?.map(
+                        (item: any, index: any) => (
+                          <p key={index}>- {item.category.toString()}</p>
+                        )
+                      )
+                    ) : (
+                      <p>- No shared with third party</p>
+                    )}
+                    <br />
+
+                    <h6>*Data Collected*</h6>
+                    {currentApp?.app_data_safety?.data_collected?.map(
+                      (item: any, index: any) => (
+                        <p key={index}>- {item.category.toString()}</p>
+                      )
+                    )}
+                    <br />
+
+                    <h6>*Security Practices*</h6>
+                    {currentApp?.app_data_safety?.security_practices?.map(
+                      (item: any, index: any) => (
+                        <p key={index}>- {item.category.toString()}</p>
+                      )
+                    )}
                   </div>
 
                   <div className="col-span-1 p-5 rounded-[20px] border border-solid border-opacity-10 bg-[#DEEBF2] bg-opacity-50">
                     <h4 className="text-xl font-bold text-left text-[#4F4F4F] mb-4">
                       Privacy Policy
                     </h4>
-                    <p>{currentApp?.privacyPolicy}</p>
+
+                    <h6>*Data Shared*</h6>
+                    <p>
+                      {currentApp?.app_privacy_policy?.data_shared?.toString()}
+                    </p>
+                    <br />
+
+                    <h6>*Data Collected*</h6>
+                    <p>
+                      {currentApp?.app_privacy_policy?.data_collected?.toString()}
+                    </p>
+                    <br />
+
+                    <h6>*Security Practices*</h6>
+                    <p>
+                      {currentApp?.app_privacy_policy?.security_practices?.toString()}
+                    </p>
                   </div>
 
                   <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex justify-center flex-col items-center">
                     <h3
                       className={`text-xl font-sans ${
-                        currentApp?.status == 1
+                        currentApp?.app_status == 1
                           ? 'text-[#00B298]'
-                          : 'text-[#fd0000]'
+                          : 'text-[#ccc]'
                       } font-semibold`}
                     >
-                      {currentApp?.status == 1 ? 'Correct' : 'Incorrect'}
+                      {currentApp?.app_status == 1 ? 'Correct' : 'None'}
                     </h3>
 
                     <div
                       className={`${
-                        currentApp?.status == 1
+                        currentApp?.app_status == 1
                           ? 'bg-[#BAFFF5]'
-                          : 'bg-[#fd0000]'
+                          : 'bg-[#ccc]'
                       } bg-opacity-50 flex justify-center px-20 py-5 my-3 rounded-lg`}
                     >
                       <svg
@@ -209,7 +270,7 @@ export const DetailPage = () => {
                         <path
                           d="M20.4958 44.1162L0.883695 24.5041C-0.294565 23.3258 -0.294565 21.4154 0.883695 20.237L5.15063 15.97C6.32889 14.7916 8.23943 14.7916 9.41769 15.97L22.6294 29.1815L50.9273 0.883695C52.1056 -0.294565 54.0161 -0.294565 55.1944 0.883695L59.4613 5.15075C60.6396 6.32901 60.6396 8.23943 59.4613 9.4178L24.7629 44.1163C23.5845 45.2946 21.6741 45.2946 20.4958 44.1162Z"
                           fill={`${
-                            currentApp?.status == 1 ? '#36DDC4' : '#ffffff'
+                            currentApp?.app_status == 1 ? '#36DDC4' : '#ffffff'
                           }`}
                         />
                       </svg>
@@ -217,18 +278,18 @@ export const DetailPage = () => {
 
                     <h3
                       className={`text-xl font-sans ${
-                        currentApp?.status == 1
+                        currentApp?.app_status == 1
                           ? 'text-[#00B298]'
-                          : 'text-[#fd0000]'
+                          : 'text-[#ccc]'
                       } font-semibold`}
                     >
-                      {currentApp?.status == 1 ? 'Không vi phạm' : 'Vi phạm'}
+                      {currentApp?.app_status == 1 ? 'Không vi phạm' : 'None'}
                     </h3>
                   </div>
                 </div>
               </div>
               <div className="col-span-3 pl-5 border-l-2 border-[#6B6B6B] text-[#4F4F4F]">
-                <div>
+                {/* <div>
                   <div>
                     <div className="flex">
                       <p className="text-left font-semibold mb-1">
@@ -288,6 +349,15 @@ export const DetailPage = () => {
                       onChange={(e) => setEmail(e.target.value)}
                     />
                   </div>
+                </div> */}
+
+                <div className="w-full h-[200px] bg-gray-100 flex justify-center items-center">
+                  <Button
+                    onClick={handleShowModalLogin}
+                    className="bg-blue-100"
+                  >
+                    Đăng nhập
+                  </Button>
                 </div>
 
                 <div className="mt-10">
@@ -296,7 +366,8 @@ export const DetailPage = () => {
                       Ý kiến của bạn
                     </h2>
                     <h2 className="absolute right-2 top-0 font-medium text-[#4F4F4F] text-left text-xl">
-                      {currentApp?.id}/{data?.length} ({category?.name})
+                      {parseInt(appOrderStrore || '') + 1}/{data?.length} (
+                      {JSON.parse(categoryStore || '').category_name})
                     </h2>
                   </div>
                   <div className="relative my-4">
@@ -450,6 +521,11 @@ export const DetailPage = () => {
               />
             </div>
           )}
+
+          <ModalLogin
+            visible={showModalLogin}
+            handleCancel={handleShowModalLogin}
+          />
         </main>
       </div>
     </div>
