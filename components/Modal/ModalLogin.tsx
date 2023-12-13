@@ -1,4 +1,4 @@
-import {Modal} from '@douyinfe/semi-ui';
+import {Button, Modal} from '@douyinfe/semi-ui';
 import {useState} from 'react';
 
 export const ModalLogin = ({
@@ -10,18 +10,44 @@ export const ModalLogin = ({
 }) => {
   const [username, setUsername] = useState<any>('');
   const [email, setEmail] = useState<any>('');
+  const [loading, setLoading] = useState<any>(false);
 
   return (
     <Modal
-      title="Đăng nhập"
+      title="Sign In"
       visible={visible}
       onCancel={handleCancel}
       closeOnEsc={true}
+      footer={
+        <div className="shrink-0 inline-flex w-full justify-between flex-col items-center gap-y-[0px] border-solid border-[#00000000] rounded-bl-[5px] rounded-br-[5px] bg-[#00000000]">
+          <div className="self-stretch shrink-0 flex w-full justify-between items-center gap-x-[0px] bg-[#00000000]">
+            <div></div>
+            <div className="flex flex-row">
+              <div className="shrink-0 inline-flex justify-center items-center gap-x-[0px] pt-[0px] pl-[12px] pr-[0px] pb-[0px]">
+                <Button
+                  className="h-[32px] bg-gray-100"
+                  type="tertiary"
+                >
+                  Cancel
+                </Button>
+              </div>
+              <div className="shrink-0 inline-flex justify-center items-center gap-x-[0px] pt-[0px] pl-[0px] pr-[0px] pb-[0px]">
+                <Button
+                  className="h-[32px] !bg-blue-500 !text-white"
+                  loading={loading}
+                >
+                  Submit
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      }
     >
       <div>
         <div>
           <div className="flex">
-            <p className="text-left font-semibold mb-1">Tên của bạn</p>
+            <p className="text-left font-semibold mb-1">Username</p>
             <svg
               className="mt-1 ml-1"
               xmlns="http://www.w3.org/2000/svg"
@@ -49,7 +75,7 @@ export const ModalLogin = ({
 
         <div className="my-5">
           <div className="flex">
-            <p className="text-left font-semibold mb-1">Email của bạn</p>
+            <p className="text-left font-semibold mb-1">Email</p>
             <svg
               className="mt-1 ml-1"
               xmlns="http://www.w3.org/2000/svg"

@@ -1,13 +1,11 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 'use client';
 
-import {fake} from '@/utils/fake';
-import {convertNumber} from '@/utils/helpers';
 import React, {useEffect, useState} from 'react';
-import {Button, Image, Toast} from '@douyinfe/semi-ui';
-import {APIService} from '@/utils/api/apps.api';
-import {showToastFail} from '@/utils/showToast';
+import {Button, Image} from '@douyinfe/semi-ui';
 import {ModalLogin} from '../Modal/ModalLogin';
 import {ApiUrl} from '@/utils/apiUrl';
+import {IconClose, IconExit, IconSetting} from '@douyinfe/semi-icons';
 
 export const DetailPage = () => {
   const categoryStore = localStorage.getItem('category');
@@ -18,6 +16,7 @@ export const DetailPage = () => {
   const [currentApp, setCurrentApp] = useState<any>(null);
 
   const [showModalLogin, setShowModalLogin] = useState<any>(false);
+  const [showInfoWindow, setShowInfoWindow] = useState<any>('');
 
   const [username, setUsername] = useState<any>('');
   const [email, setEmail] = useState<any>('');
@@ -78,7 +77,11 @@ export const DetailPage = () => {
     await res.json().then((data: any) => {
       setData(data.data);
       setCurrentApp(data.data[0]);
+      console.log(data.data[0]?.app_data_safety);
     });
+
+    setUsername('Nguyen Van A');
+    setEmail('example@gmail.com');
   };
 
   useEffect(() => {
@@ -94,7 +97,7 @@ export const DetailPage = () => {
         <header className="bg-[#f4f4f4] text-black text-lg p-4 w:lg-1/3 mx-auto mt-10 rounded-full font-sans">
           <div className="flex justify-center text-[#4F4F4F]">
             <a href="/" className="flex justify-center mx-12">
-              <h3 className="text-left">Thông Tin Nhóm Nghiên Cứu</h3>
+              <h3 className="text-left">Research Group Information</h3>
               <svg
                 className="mt-0.5"
                 xmlns="http://www.w3.org/2000/svg"
@@ -120,7 +123,7 @@ export const DetailPage = () => {
               </svg>
             </a>
             <a href="/" className="flex justify-center mx-12">
-              <h3 className="text-right">Thông Tin Dự Án</h3>
+              <h3 className="text-right">Project Information</h3>
               <svg
                 className="mt-0.5"
                 xmlns="http://www.w3.org/2000/svg"
@@ -149,9 +152,9 @@ export const DetailPage = () => {
         </header>
 
         {/* Content Section */}
-        <main className="flex-grow container mx-auto px-4 py-4 font-sans mt-10">
-          <h2 className="font-bold text-[#4F4F4F] text-left text-2xl">
-            Thông tin chúng tôi đã phân tích
+        <main className="flex-grow container mx-auto px-4 py-4 font-sans mt-8">
+          <h2 className="font-bold text-[#4F4F4F] text-left text-2xl mb-5">
+            Information We Have Analyzed
           </h2>
 
           {data?.length > 0 ? (
@@ -185,17 +188,38 @@ export const DetailPage = () => {
                     </p>
                   </div>
                 </div>
-                <div className="relative grid grid-cols-2 gap-44 p-0 mt-8">
-                  <div className="col-span-1 p-5 rounded-[20px] border border-solid border-opacity-10 bg-[#DEEBF2] bg-opacity-50">
+                <div className="relative grid grid-cols-2 gap-44 p-0 mt-8 ">
+                  <div className="col-span-1 p-5 rounded-[20px] border border-solid border-opacity-10 bg-[#DEEBF2] bg-opacity-50 h-[560px]">
                     <h4 className="text-xl font-bold text-left text-[#4F4F4F] mb-4">
                       Data Safety
                     </h4>
 
-                    <h6>*Data Shared*</h6>
+                    <h6>I. Data Shared</h6>
                     {currentApp?.app_data_safety?.data_shared?.length > 0 ? (
                       currentApp?.app_data_safety?.data_shared?.map(
                         (item: any, index: any) => (
-                          <p key={index}>- {item.category.toString()}</p>
+                          <div key={index}>
+                            <a
+                              className="cursor-pointer hover:text-[#36DDC4]"
+                              onClick={() => setShowInfoWindow(item?.category)}
+                            >
+                              - {item.category.toString()}
+                            </a>
+                            <div
+                              className={`${
+                                showInfoWindow === item?.category ? '' : 'hidden'
+                              } absolute mt-1 bg-white rounded p-3 shadow-lg border border-gray-300`}
+                            >
+                              {item?.sub_info?.map((sub: any, index: any) => {
+                                return (
+                                  <div key={index}>
+                                    <p>{sub?.optional ? '[Optional] ' : '[Must] '}{sub?.data_type} ({sub?.purpose})</p>
+                                  </div>
+                                );
+                              })}
+                              <IconClose className="absolute top-1 right-1 cursor-pointer hover:text-[#36DDC4]" size='small' onClick={() => setShowInfoWindow('')} />
+                            </div>
+                          </div>
                         )
                       )
                     ) : (
@@ -203,28 +227,51 @@ export const DetailPage = () => {
                     )}
                     <br />
 
-                    <h6>*Data Collected*</h6>
+                    <h6>II. Data Collected</h6>
                     {currentApp?.app_data_safety?.data_collected?.map(
                       (item: any, index: any) => (
-                        <p key={index}>- {item.category.toString()}</p>
+                        <div key={index}>
+                          <a
+                            className="cursor-pointer hover:text-[#36DDC4]"
+                            onClick={() => setShowInfoWindow(item?.category)}
+                          >
+                            - {item.category.toString()}
+                          </a>
+                          <div
+                            className={`${
+                              showInfoWindow === item?.category ? '' : 'hidden'
+                            } absolute mt-1 bg-white rounded p-3 shadow-lg border border-gray-300`}
+                          >
+                            {item?.sub_info?.map((sub: any, index: any) => {
+                              return (
+                                <div key={index}>
+                                  <p>{sub?.optional ? '[Optional] ' : '[Must] '}{sub?.data_type} ({sub?.purpose})</p>
+                                </div>
+                              );
+                            })}
+                            <IconClose className="absolute top-1 right-1 cursor-pointer hover:text-[#36DDC4]" size='small' onClick={() => setShowInfoWindow('')} />
+                          </div>
+                        </div>
                       )
                     )}
                     <br />
 
-                    <h6>*Security Practices*</h6>
+                    <h6>III. Security Practices</h6>
                     {currentApp?.app_data_safety?.security_practices?.map(
                       (item: any, index: any) => (
-                        <p key={index}>- {item.category.toString()}</p>
+                        <p key={index}>
+                          - {item.category.toString()}
+                        </p>
                       )
                     )}
                   </div>
 
-                  <div className="col-span-1 p-5 rounded-[20px] border border-solid border-opacity-10 bg-[#DEEBF2] bg-opacity-50">
+                  <div className="col-span-1 p-5 rounded-[20px] border border-solid border-opacity-10 bg-[#DEEBF2] bg-opacity-50 h-[560px]">
                     <h4 className="text-xl font-bold text-left text-[#4F4F4F] mb-4">
                       Privacy Policy
                     </h4>
 
-                    <h6>*Data Shared*</h6>
+                    {/* <h6>*Data Shared*</h6>
                     <p>
                       {currentApp?.app_privacy_policy?.data_shared?.toString()}
                     </p>
@@ -239,7 +286,7 @@ export const DetailPage = () => {
                     <h6>*Security Practices*</h6>
                     <p>
                       {currentApp?.app_privacy_policy?.security_practices?.toString()}
-                    </p>
+                    </p> */}
                   </div>
 
                   <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex justify-center flex-col items-center">
@@ -289,42 +336,41 @@ export const DetailPage = () => {
                 </div>
               </div>
               <div className="col-span-3 pl-5 border-l-2 border-[#6B6B6B] text-[#4F4F4F]">
-                {/* <div>
+                <div>
                   <div>
-                    <div className="flex">
-                      <p className="text-left font-semibold mb-1">
-                        Tên của bạn
-                      </p>
-                      <svg
-                        className="mt-1 ml-1"
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="16"
-                        height="16"
-                        viewBox="0 0 16 16"
-                        fill="none"
-                      >
-                        <path
-                          fill-rule="evenodd"
-                          clip-rule="evenodd"
-                          d="M14.6667 7.99992C14.6667 11.6818 11.6819 14.6666 8.00004 14.6666C4.31814 14.6666 1.33337 11.6818 1.33337 7.99992C1.33337 4.31802 4.31814 1.33325 8.00004 1.33325C11.6819 1.33325 14.6667 4.31802 14.6667 7.99992ZM8.00004 7.33325C8.36823 7.33325 8.66671 7.63173 8.66671 7.99992V11.3338C8.66671 11.702 8.36823 12.0005 8.00004 12.0005C7.63185 12.0005 7.33337 11.702 7.33337 11.3338V7.99992C7.33337 7.63173 7.63185 7.33325 8.00004 7.33325ZM8.00004 5.99992C8.36823 5.99992 8.66671 5.70144 8.66671 5.33325C8.66671 4.96506 8.36823 4.66659 8.00004 4.66659C7.63185 4.66659 7.33337 4.96506 7.33337 5.33325C7.33337 5.70144 7.63185 5.99992 8.00004 5.99992Z"
-                          fill="#4F4F4F"
-                        />
-                      </svg>
+                    <div className="flex justify-between mb-2">
+                      <div className="flex">
+                        <p className="text-left font-semibold">Username</p>
+                        <svg
+                          className="mt-1 ml-1"
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="16"
+                          height="16"
+                          viewBox="0 0 16 16"
+                          fill="none"
+                        >
+                          <path
+                            fill-rule="evenodd"
+                            clip-rule="evenodd"
+                            d="M14.6667 7.99992C14.6667 11.6818 11.6819 14.6666 8.00004 14.6666C4.31814 14.6666 1.33337 11.6818 1.33337 7.99992C1.33337 4.31802 4.31814 1.33325 8.00004 1.33325C11.6819 1.33325 14.6667 4.31802 14.6667 7.99992ZM8.00004 7.33325C8.36823 7.33325 8.66671 7.63173 8.66671 7.99992V11.3338C8.66671 11.702 8.36823 12.0005 8.00004 12.0005C7.63185 12.0005 7.33337 11.702 7.33337 11.3338V7.99992C7.33337 7.63173 7.63185 7.33325 8.00004 7.33325ZM8.00004 5.99992C8.36823 5.99992 8.66671 5.70144 8.66671 5.33325C8.66671 4.96506 8.36823 4.66659 8.00004 4.66659C7.63185 4.66659 7.33337 4.96506 7.33337 5.33325C7.33337 5.70144 7.63185 5.99992 8.00004 5.99992Z"
+                            fill="#4F4F4F"
+                          />
+                        </svg>
+                      </div>
+                      <IconExit className="mt-1" />
                     </div>
                     <input
                       type="text"
                       required
                       className="w-full rounded-lg bg-[#DEEBF2] bg-opacity-50 px-5 py-3"
-                      placeholder="Nguyen Van A"
-                      onChange={(e) => setUsername(e.target.value)}
+                      value={username}
+                      disabled
                     />
                   </div>
 
                   <div className="my-5">
                     <div className="flex">
-                      <p className="text-left font-semibold mb-1">
-                        Email của bạn
-                      </p>
+                      <p className="text-left font-semibold mb-2">Email</p>
                       <svg
                         className="mt-1 ml-1"
                         xmlns="http://www.w3.org/2000/svg"
@@ -345,25 +391,25 @@ export const DetailPage = () => {
                       type="email"
                       required
                       className="w-full rounded-lg bg-[#DEEBF2] bg-opacity-50 px-5 py-3"
-                      placeholder="nguyenvana@gmail.com"
-                      onChange={(e) => setEmail(e.target.value)}
+                      value={email}
+                      disabled
                     />
                   </div>
-                </div> */}
+                </div>
 
-                <div className="w-full h-[200px] bg-gray-100 flex justify-center items-center">
+                {/* <div className="w-full h-[200px] bg-gray-100 flex justify-center items-center">
                   <Button
                     onClick={handleShowModalLogin}
-                    className="bg-blue-100"
+                    className="bg-gray-200 !text-gray-700"
                   >
-                    Đăng nhập
+                    Sign In
                   </Button>
-                </div>
+                </div> */}
 
                 <div className="mt-10">
                   <div className="relative">
                     <h2 className="font-medium text-[#4F4F4F] text-left text-2xl">
-                      Ý kiến của bạn
+                      Your Opinion
                     </h2>
                     <h2 className="absolute right-2 top-0 font-medium text-[#4F4F4F] text-left text-xl">
                       {parseInt(appOrderStrore || '') + 1}/{data?.length} (
@@ -381,7 +427,7 @@ export const DetailPage = () => {
                             className="form-radio accent-[#4f4f4f] h-4 w-4"
                             onChange={(e) => setOption(e.target.value)}
                           />
-                          <span className="ml-2">Hoàn toàn đồng ý</span>
+                          <span className="ml-2">Totally agree</span>
                         </div>
                         <div className="mb-1">
                           <input
@@ -391,7 +437,7 @@ export const DetailPage = () => {
                             className="form-radio accent-[#4f4f4f] h-4 w-4"
                             onChange={(e) => setOption(e.target.value)}
                           />
-                          <span className="ml-2">Đồng ý</span>
+                          <span className="ml-2">Agree</span>
                         </div>
                         <div className="mb-1">
                           <input
@@ -401,7 +447,7 @@ export const DetailPage = () => {
                             className="form-radio accent-[#4f4f4f] h-4 w-4"
                             onChange={(e) => setOption(e.target.value)}
                           />
-                          <span className="ml-2">Trung lập</span>
+                          <span className="ml-2">Neutral</span>
                         </div>
                         <div className="mb-1">
                           <input
@@ -411,7 +457,7 @@ export const DetailPage = () => {
                             className="form-radio accent-[#4f4f4f] h-4 w-4"
                             onChange={(e) => setOption(e.target.value)}
                           />
-                          <span className="ml-2">Không đồng ý</span>
+                          <span className="ml-2">Disagree</span>
                         </div>
                         <div className="mb-1">
                           <input
@@ -421,7 +467,7 @@ export const DetailPage = () => {
                             className="form-radio accent-[#4f4f4f] h-4 w-4"
                             onChange={(e) => setOption(e.target.value)}
                           />
-                          <span className="ml-2">Hoàn toàn không đồng ý</span>
+                          <span className="ml-2">Totally disagree</span>
                         </div>
                       </div>
 
@@ -444,7 +490,7 @@ export const DetailPage = () => {
                               fill="#36DDC4"
                             />
                           </svg>
-                          <p className="ml-2">Gửi</p>
+                          <p className="ml-2">Next</p>
                         </button>
                       </div>
                     </form>
@@ -455,7 +501,7 @@ export const DetailPage = () => {
 
                 <div className="mt-10 text-lg text-[#4f4f4f]">
                   <a href="/" className="flex">
-                    <h3 className="text-left">Xem mô tả các khái niệm</h3>
+                    <h3 className="text-left">See description of concepts</h3>
                     <svg
                       className="mt-0.5"
                       xmlns="http://www.w3.org/2000/svg"
@@ -482,7 +528,7 @@ export const DetailPage = () => {
                   </a>
                   <a href="/" className="flex mt-2">
                     <h3 className="text-right">
-                      Xem ngoại lệ cung cấp bởi Google
+                      See exceptions provided by Google
                     </h3>
                     <svg
                       className="mt-0.5"
