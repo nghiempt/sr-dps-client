@@ -1,7 +1,7 @@
 import {Button, Modal} from '@douyinfe/semi-ui';
 import {useState} from 'react';
 
-export const ModalLogin = ({
+export const ModalSignIn = ({
   visible,
   handleCancel,
 }: {
@@ -11,6 +11,20 @@ export const ModalLogin = ({
   const [username, setUsername] = useState<any>('');
   const [email, setEmail] = useState<any>('');
   const [loading, setLoading] = useState<any>(false);
+
+  const submit = async () => {
+    setLoading(true);
+    localStorage.setItem(
+      'user',
+      JSON.stringify({
+        username,
+        email,
+      })
+    );
+    setLoading(false);
+    handleCancel();
+    window.location.href = `/detail`;
+  };
 
   return (
     <Modal
@@ -24,10 +38,7 @@ export const ModalLogin = ({
             <div></div>
             <div className="flex flex-row">
               <div className="shrink-0 inline-flex justify-center items-center gap-x-[0px] pt-[0px] pl-[12px] pr-[0px] pb-[0px]">
-                <Button
-                  className="h-[32px] bg-gray-100"
-                  type="tertiary"
-                >
+                <Button className="h-[32px] bg-gray-100" type="tertiary">
                   Cancel
                 </Button>
               </div>
@@ -35,6 +46,7 @@ export const ModalLogin = ({
                 <Button
                   className="h-[32px] !bg-blue-500 !text-white"
                   loading={loading}
+                  onClick={submit}
                 >
                   Submit
                 </Button>

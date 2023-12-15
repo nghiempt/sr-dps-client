@@ -28,3 +28,18 @@ export const showToastFail = (message: String, duration: any) => {
     Toast.destroyAll();
   }, 3000);
 };
+
+/**
+ *
+ * @param message
+ * @param duration
+ */
+export const showToastDevelopment = () => {
+  Toast.info({
+    content: 'Features are still under development, please wait patiently !',
+    duration: 3000,
+  });
+  setTimeout(() => {
+    Toast.destroyAll();
+  }, 3000);
+};

@@ -1,4 +1,4 @@
-import { DetailPage } from '@/components/Detail/DetailPage';
+import { DetailPage } from '@/components/Detail/Detail.Page';
 import HBoxWrapper from '@/components/HBoxWrapper';
 
 export default async function Detail() {
