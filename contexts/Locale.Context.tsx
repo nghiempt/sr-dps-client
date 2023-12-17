@@ -6,14 +6,14 @@ import en_US from '@douyinfe/semi-ui/lib/es/locale/source/en_US';
 import vi_VN from '@douyinfe/semi-ui/lib/es/locale/source/vi_VN';
 import {createContext, useState} from 'react';
 
-const HLocaleContext = createContext({
+const LocaleContext = createContext({
   locale: Locale.vi_VN,
   setLocale: (locale: Locale) => {},
 });
 
-export default HLocaleContext;
+export default LocaleContext;
 
-export const HLocaleProvider = ({children}: {children: React.ReactNode}) => {
+export const LocaleProvider = ({children}: {children: React.ReactNode}) => {
   const [locale, setKLocale] = useState(Locale.en_US);
   const [semiLocale, setSemiLocale] = useState(en_US);
 
@@ -32,10 +32,10 @@ export const HLocaleProvider = ({children}: {children: React.ReactNode}) => {
   };
 
   return (
-    <HLocaleContext.Provider value={contextValue}>
+    <LocaleContext.Provider value={contextValue}>
       <ConfigProvider timeZone={'Asia/Ho_Chi_Minh'} locale={semiLocale}>
         {children}
       </ConfigProvider>
-    </HLocaleContext.Provider>
+    </LocaleContext.Provider>
   );
 };

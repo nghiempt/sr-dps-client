@@ -2,14 +2,14 @@
 
 import {createContext, useState} from 'react';
 
-const HDarkModeContext = createContext({
+const DarkModeContext = createContext({
   isDarkMode: false,
   setDarkMode: (isDarkMode: boolean) => {},
 });
 
-export default HDarkModeContext;
+export default DarkModeContext;
 
-export const HDarkModeProvider = ({children}: {children: React.ReactNode}) => {
+export const DarkModeProvider = ({children}: {children: React.ReactNode}) => {
   const [isDarkMode, setKDarkMode] = useState(false);
 
   const setDarkMode = (isDarkMode: boolean) => {
@@ -22,8 +22,8 @@ export const HDarkModeProvider = ({children}: {children: React.ReactNode}) => {
   };
 
   return (
-    <HDarkModeContext.Provider value={contextValue}>
+    <DarkModeContext.Provider value={contextValue}>
       {children}
-    </HDarkModeContext.Provider>
+    </DarkModeContext.Provider>
   );
 };

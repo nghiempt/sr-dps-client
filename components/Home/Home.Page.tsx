@@ -3,7 +3,7 @@
 import {ApiUrl} from '@/utils/apiUrl';
 import {Image} from '@douyinfe/semi-ui';
 import React, {useEffect, useState} from 'react';
-import HHHeader from '../HHeader';
+import HeaderCustom from '../Global/Global.Header';
 
 export const HomePage = () => {
   const [data, setData] = useState<any>([]);
@@ -36,7 +36,7 @@ export const HomePage = () => {
   return (
     <div className="h-screen w-full">
       <div className="min-h-screen flex flex-col">
-        <HHHeader />
+        <HeaderCustom />
 
         <main className="flex-grow container mx-auto px-4 py-4 font-sans text-2xl mt-10">
           <h2 className="font-bold text-[#4F4F4F] ml-[352px] mb-10">

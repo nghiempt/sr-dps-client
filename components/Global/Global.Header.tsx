@@ -2,7 +2,7 @@
 
 import {showToastDevelopment} from '@/utils/showToast';
 
-const HHHeader = () => {
+const HeaderCustom = () => {
   return (
     <header className="bg-[#f4f4f4] text-black text-lg p-4 w:lg-1/3 mx-auto mt-10 rounded-full font-sans">
       <div className="flex justify-center text-[#4F4F4F]">
@@ -75,4 +75,4 @@ const HHHeader = () => {
   );
 };
 
-export default HHHeader;
+export default HeaderCustom;

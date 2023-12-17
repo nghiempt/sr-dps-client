@@ -5,12 +5,12 @@ import React, {useEffect, useState} from 'react';
 import {Button, Image} from '@douyinfe/semi-ui';
 import {ApiUrl} from '@/utils/apiUrl';
 import {IconClose, IconExit, IconHome} from '@douyinfe/semi-icons';
-import HHHeader from '../HHeader';
 import {showToastDevelopment} from '@/utils/showToast';
 import {ModalSignOut} from '../Modal/Modal.SignOut';
 import {ModalSignIn} from '../Modal/Modal.SignIn';
+import HeaderCustom from '../Global/Global.Header';
 
-export const DetailPage = () => {
+export const ListAppPage = () => {
   const categoryStore = localStorage.getItem('category');
   const appOrderStrore = localStorage.getItem('appOrder');
   const user: any = localStorage.getItem('user');
@@ -136,7 +136,7 @@ export const DetailPage = () => {
   return (
     <div className="h-screen w-ful">
       <div className="min-h-screen flex flex-col">
-        <HHHeader />
+        <HeaderCustom />
 
         {/* Content Section */}
         <main className="flex-grow container mx-auto px-4 py-4 font-sans mt-8">

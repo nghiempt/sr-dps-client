@@ -9,7 +9,17 @@
   --background-end-rgb: 255, 255, 255;
 }
 
+/* .semi-button-primary {
+  background-color: rgba(var(--semi-indigo-3), 1) !important;
+  color: white !important;
+}
+
+.semi-button-primary:hover {
+  background-color: rgba(var(--semi-indigo-4), 1) !important;
+} */
+
 body {
   color: var(--semi-color-text-0);
-  background-color: var( --semi-color-bg-0);
+  background-color: var(--semi-color-bg-0);
+  position: relative;
 }

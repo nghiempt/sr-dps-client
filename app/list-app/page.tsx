@@ -1,10 +1,10 @@
 import BoxWrapperCustom from '@/components/Global/Global.BoxWrapper';
-import {HomePage} from '@/components/Home/Home.Page';
+import { ListAppPage } from '@/components/ListApp/ListApp.Page';
 
-export default async function HomeServer() {
+export default async function Detail() {
   return (
     <BoxWrapperCustom>
-      <HomePage />
+      <ListAppPage />
     </BoxWrapperCustom>
   );
 }

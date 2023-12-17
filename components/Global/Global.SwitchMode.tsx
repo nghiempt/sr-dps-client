@@ -1,6 +1,6 @@
 'use client';
 
-import HDarkModeContext from '@/contexts/HDarkModeContext';
+import DarkModeContext from '@/contexts/DarkMode.Context';
 import {Switch} from '@douyinfe/semi-ui';
 import React, {useContext} from 'react';
 
@@ -9,8 +9,8 @@ import React, {useContext} from 'react';
  * @param param0
  * @returns
  */
-const HSwitchMode = () => {
-  const darkModeContext = useContext(HDarkModeContext);
+const SwitchModeCustom = () => {
+  const darkModeContext = useContext(DarkModeContext);
 
   const switchMode = () => {
     const body = document.body;
@@ -33,4 +33,4 @@ const HSwitchMode = () => {
   );
 };
 
-export default HSwitchMode;
+export default SwitchModeCustom;

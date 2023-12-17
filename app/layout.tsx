@@ -1,21 +1,21 @@
-import HProviders from '@/contexts/HProviders';
+import ProvidersContext from '@/contexts/Providers.Context';
 import './globals.css';
 import type {Metadata} from 'next';
 import {Inter} from 'next/font/google';
 const inter = Inter({subsets: ['latin']});
 
 export const metadata: Metadata = {
-  title: 'Survey',
-  description: 'Survey',
+  title: 'Privacy Policy Survey',
+  description: 'Privacy Policy Survey',
 };
 
 export default function RootLayout({children}: {children: React.ReactNode}) {
   return (
     <html lang="en">
       <body className={inter.className}>
-        <HProviders>
+        <ProvidersContext>
           {children}
-        </HProviders>
+        </ProvidersContext>
       </body>
     </html>
   );

@@ -7,7 +7,7 @@ import React from 'react';
  * @param param0
  * @returns
  */
-const HBoxWrapper = ({children}: {children: React.ReactNode}) => {
+const BoxWrapperCustom = ({children}: {children: React.ReactNode}) => {
   return (
     <div className='flex flex-row justify-center h-screen w-full'>
       <div className="flex-1 box-content">{children}</div>
@@ -15,4 +15,4 @@ const HBoxWrapper = ({children}: {children: React.ReactNode}) => {
   );
 };
 
-export default HBoxWrapper;
+export default BoxWrapperCustom;
