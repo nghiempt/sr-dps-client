@@ -10,6 +10,13 @@ export const HomePage = () => {
 
   const goToDetail = async (item: any) => {
     localStorage.setItem('category', JSON.stringify(item));
+    localStorage.setItem(
+      'user',
+      JSON.stringify({
+        username: '',
+        email: '',
+      })
+    );
     window.location.href = `/detail`;
   };
 

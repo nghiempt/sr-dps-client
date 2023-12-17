@@ -229,7 +229,7 @@ export const DetailPage = () => {
                         )
                       )
                     ) : (
-                      <p>- No shared with third party</p>
+                      <p>- No data shared with third party</p>
                     )}
                     <br />
 
@@ -303,7 +303,7 @@ export const DetailPage = () => {
                   <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex justify-center flex-col items-center">
                     <div
                       className={`${
-                        currentApp?.label?.Incorrect == 1
+                        currentApp?.label?.incorrect == 1
                           ? 'bg-[#0000ff] cursor-pointer hover:bg-opacity-70'
                           : 'bg-[#ccc]'
                       } bg-opacity-50 flex justify-center w-[200px] py-4 my-3 rounded-lg flex justify-center items-center `}
@@ -327,7 +327,7 @@ export const DetailPage = () => {
 
                     <div
                       className={`${
-                        currentApp?.label?.Incomplete == 1
+                        currentApp?.label?.incomplete == 1
                           ? 'bg-[#0000ff] cursor-pointer hover:bg-opacity-70'
                           : 'bg-[#ccc]'
                       } bg-opacity-50 flex justify-center my-3 rounded-lg flex justify-center items-center w-[200px] py-4`}
@@ -357,7 +357,7 @@ export const DetailPage = () => {
                           showInfoWindowPrivacyPolicy ? '' : 'hidden'
                         } absolute bg-white rounded p-3 shadow-lg border border-gray-300 w-[400px]`}
                       >
-                        <p>{currentApp?.label_description?.Incomplete}</p>
+                        <p>{currentApp?.label_description?.incomplete}</p>
 
                         <IconClose
                           className="absolute top-1 right-1 cursor-pointer hover:text-[#36DDC4]"
@@ -373,7 +373,7 @@ export const DetailPage = () => {
 
                     <div
                       className={`${
-                        currentApp?.label?.Inconsistent == 1
+                        currentApp?.label?.inconsistent == 1
                           ? 'bg-[#0000ff] cursor-pointer hover:bg-opacity-70'
                           : 'bg-[#ccc]'
                       } bg-opacity-50 flex justify-center w-[200px] py-4 my-3 rounded-lg flex justify-center items-center`}
