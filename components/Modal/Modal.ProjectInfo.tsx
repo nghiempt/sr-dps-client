@@ -1,41 +1,45 @@
 import {Button, Modal} from '@douyinfe/semi-ui';
 
 export const ModalProjectInfo = ({
-  visible,
+  isVisible,
   handleCancel,
 }: {
-  visible: any;
+  isVisible: any;
   handleCancel: any;
 }) => {
   return (
     <Modal
-      title="ProjectInfo"
-      visible={visible}
+      title="Project Information"
+      visible={isVisible}
+      onOk={() => {}}
       onCancel={handleCancel}
-      closeOnEsc={true}
-      footer={
-        <div className="shrink-0 inline-flex w-full justify-between flex-col items-center gap-y-[0px] border-solid border-[#00000000] rounded-bl-[5px] rounded-br-[5px] bg-[#00000000]">
-          <div className="self-stretch shrink-0 flex w-full justify-between items-center gap-x-[0px] bg-[#00000000]">
-            <div></div>
-            <div className="flex flex-row">
-              <div className="shrink-0 inline-flex justify-center items-center gap-x-[0px] pt-[0px] pl-[12px] pr-[0px] pb-[0px]">
-                <Button className="h-[32px] bg-gray-100" type="tertiary">
-                  Cancel
-                </Button>
-              </div>
-              <div className="shrink-0 inline-flex justify-center items-center gap-x-[0px] pt-[0px] pl-[0px] pr-[0px] pb-[0px]">
-                <Button className="h-[32px] !bg-blue-500 !text-white">
-                  Submit
-                </Button>
-              </div>
-            </div>
-          </div>
-        </div>
-      }
+      centered
+      bodyStyle={{overflow: 'auto'}}
+      footer={<div className=""></div>}
     >
-      <div>
-        <h2>ProjectInfo</h2>
-      </div>
+      <p style={{lineHeight: 1.8}}>
+        Semi Design is a design system developed and maintained by IES Front-end
+        Team and UED Team
+      </p>
+      <p style={{lineHeight: 1.8}}>
+        Semi Design create a consistent, good-looking, easy-to-use, and
+        efficient user experience with a user-centric, content-first, and
+        human-friendly design system.
+      </p>
+      <ul>
+        <li>
+          <p>Content-first</p>
+        </li>
+        <li>
+          <p>Customized theming</p>
+        </li>
+        <li>
+          <p>Internationalized</p>
+        </li>
+        <li>
+          <p>Humanism</p>
+        </li>
+      </ul>
     </Modal>
   );
 };

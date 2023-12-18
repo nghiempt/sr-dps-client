@@ -1,77 +1,59 @@
 'use client';
 
-import {showToastDevelopment} from '@/utils/showToast';
+import {IconSemiLogo} from '@douyinfe/semi-icons';
+import {Button, Layout} from '@douyinfe/semi-ui';
+import {useState} from 'react';
+import {ModalGroupInfo} from '../Modal/Modal.GroupInfo';
+import {ModalProjectInfo} from '../Modal/Modal.ProjectInfo';
+import Image from 'next/image';
 
 const HeaderCustom = () => {
+  const [isVisibleModalGroupInfo, setIsVisibleModalGroupInfo] =
+    useState<boolean>(false);
+  const [isVisibleModalProjectInfo, setIsVisibleModalProjectInfo] =
+    useState<boolean>(false);
+
+  const handleShowModalGroupInfo = () => {
+    setIsVisibleModalGroupInfo(!isVisibleModalGroupInfo);
+  };
+
+  const handleShowModalProjectInfo = () => {
+    setIsVisibleModalProjectInfo(!isVisibleModalProjectInfo);
+  };
+
+  const {Header} = Layout;
   return (
-    <header className="bg-[#f4f4f4] text-black text-lg p-4 w:lg-1/3 mx-auto mt-10 rounded-full font-sans">
-      <div className="flex justify-center text-[#4F4F4F]">
-        <a
-          className="flex justify-center mx-12 cursor-pointer"
-          onClick={(e) => {
-            e.preventDefault();
-            showToastDevelopment();
-          }}
-        >
-          <h3 className="text-left">Research Group Information</h3>
-          <svg
-            className="mt-0.5"
-            xmlns="http://www.w3.org/2000/svg"
-            width="26"
-            height="26"
-            viewBox="0 0 26 26"
-            fill="none"
-          >
-            <path
-              d="M7.58331 18.4166L18.4166 7.58331"
-              stroke="#36DDC4"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-            <path
-              d="M7.58331 7.58331H18.4166V18.4166"
-              stroke="#36DDC4"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-          </svg>
-        </a>
-        <a
-          className="flex justify-center mx-12 cursor-pointer"
-          onClick={(e) => {
-            e.preventDefault();
-            showToastDevelopment();
-          }}
-        >
-          <h3 className="text-right">Project Information</h3>
-          <svg
-            className="mt-0.5"
-            xmlns="http://www.w3.org/2000/svg"
-            width="26"
-            height="26"
-            viewBox="0 0 26 26"
-            fill="none"
-          >
-            <path
-              d="M7.58331 18.4166L18.4166 7.58331"
-              stroke="#36DDC4"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-            <path
-              d="M7.58331 7.58331H18.4166V18.4166"
-              stroke="#36DDC4"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-          </svg>
-        </a>
-      </div>
-    </header>
+    <Header className="">
+      <Button
+        className="bg-gray-100 border border-gray-300 text-gray-700 hover:bg-gray-200 mr-2 rounded-[30px]"
+        icon={<Image src="/logo.png" alt="logo" width={14} height={14} />}
+        theme="light"
+        type="tertiary"
+        onClick={handleShowModalGroupInfo}
+      >
+        Research Group Information
+      </Button>
+
+      <Button
+        className="bg-gray-100 border border-gray-300 text-gray-700 hover:bg-gray-200 rounded-[30px]"
+        icon={<Image src="/logo.png" alt="logo" width={14} height={14} />}
+        theme="light"
+        type="tertiary"
+        onClick={handleShowModalProjectInfo}
+      >
+        Project Information
+      </Button>
+
+      <ModalGroupInfo
+        isVisible={isVisibleModalGroupInfo}
+        handleCancel={handleShowModalGroupInfo}
+      />
+
+      <ModalProjectInfo
+        isVisible={isVisibleModalProjectInfo}
+        handleCancel={handleShowModalProjectInfo}
+      />
+    </Header>
   );
 };
 
