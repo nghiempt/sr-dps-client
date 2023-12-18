@@ -667,15 +667,6 @@ export const ListAppPage = () => {
               />
             </div>
           )}
-
-          <ModalSignIn
-            visible={showModalLogin}
-            handleCancel={handleShowModalLogin}
-          />
-          <ModalSignOut
-            visible={showModalSignOut}
-            handleCancel={handleShowModalSignOut}
-          />
         </main>
       </div>
     </div>

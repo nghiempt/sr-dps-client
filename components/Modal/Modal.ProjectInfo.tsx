@@ -1,4 +1,5 @@
-import {Button, Modal} from '@douyinfe/semi-ui';
+import {IconArrowUp} from '@douyinfe/semi-icons';
+import {Descriptions, Modal, Tag} from '@douyinfe/semi-ui';
 
 export const ModalProjectInfo = ({
   isVisible,
@@ -7,6 +8,27 @@ export const ModalProjectInfo = ({
   isVisible: any;
   handleCancel: any;
 }) => {
+  const data = [
+    {key: 'Actual Users', value: '1,480,000'},
+    {
+      key: '7-day Rentention',
+      value: (
+        <span>
+          98%
+          <IconArrowUp size="small" style={{color: 'red', marginLeft: '4px'}} />
+        </span>
+      ),
+    },
+  ];
+
+  const data2 = [
+    {key: 'Actual Users', value: '1,480,000'},
+    {key: '7-day Rentention', value: '98%'},
+    {key: 'Security Level', value: 'III'},
+    {key: 'Category Tag', value: <Tag style={{margin: 0}}>E-commerce</Tag>},
+    {key: 'Authorized State', value: 'Unauthorized'},
+  ];
+
   return (
     <Modal
       title="Project Information"
@@ -17,29 +39,20 @@ export const ModalProjectInfo = ({
       bodyStyle={{overflow: 'auto'}}
       footer={<div className=""></div>}
     >
-      <p style={{lineHeight: 1.8}}>
-        Semi Design is a design system developed and maintained by IES Front-end
-        Team and UED Team
-      </p>
-      <p style={{lineHeight: 1.8}}>
-        Semi Design create a consistent, good-looking, easy-to-use, and
-        efficient user experience with a user-centric, content-first, and
-        human-friendly design system.
-      </p>
-      <ul>
-        <li>
-          <p>Content-first</p>
-        </li>
-        <li>
-          <p>Customized theming</p>
-        </li>
-        <li>
-          <p>Internationalized</p>
-        </li>
-        <li>
-          <p>Humanism</p>
-        </li>
-      </ul>
+      <Descriptions data={data2} />
+
+      <Descriptions
+        data={data}
+        row
+        size="small"
+        style={{
+          boxShadow: 'var(--semi-shadow-elevated)',
+          backgroundColor: 'var(--semi-color-bg-2)',
+          borderRadius: '4px',
+          padding: '10px',
+          marginTop: '20px',
+        }}
+      />
     </Modal>
   );
 };

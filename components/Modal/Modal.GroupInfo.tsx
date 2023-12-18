@@ -1,5 +1,5 @@
 import {Modal, Button, List} from '@douyinfe/semi-ui';
-import {IconVigoLogo, IconSemiLogo} from '@douyinfe/semi-icons';
+import {IconSemiLogo} from '@douyinfe/semi-icons';
 
 export const ModalGroupInfo = ({
   isVisible,
@@ -11,19 +11,19 @@ export const ModalGroupInfo = ({
   const data = [
     {
       icon: <IconSemiLogo style={{fontSize: 48}} />,
-      title: 'Boost new feature adoption with Integration',
-      content:
-        'Sample data is prepared for you to demostrate how Integration may be useful for your team',
-    },
-    {
-      icon: <IconVigoLogo style={{fontSize: 48}} />,
-      title: 'Introducing Dark Mode',
+      title: 'Sample',
       content:
         'Sample data is prepared for you to demostrate how Integration may be useful for your team',
     },
     {
       icon: <IconSemiLogo style={{fontSize: 48}} />,
-      title: 'New List Component',
+      title: 'Sample',
+      content:
+        'Sample data is prepared for you to demostrate how Integration may be useful for your team',
+    },
+    {
+      icon: <IconSemiLogo style={{fontSize: 48}} />,
+      title: 'Sample',
       content:
         'Sample data is prepared for you to demostrate how Integration may be useful for your team',
     },
@@ -39,9 +39,8 @@ export const ModalGroupInfo = ({
       footer={
         <div style={{textAlign: 'center'}}>
           <Button
-            type="primary"
-            theme="solid"
             onClick={handleCancel}
+            className="h-[32px] bg-blue-500 !text-white"
             style={{
               width: 240,
               margin: '4px 50px',
@@ -51,7 +50,6 @@ export const ModalGroupInfo = ({
           </Button>
           <Button
             className="h-[32px] bg-gray-100"
-            type="tertiary"
             style={{
               width: 240,
               margin: '4px 50px',
@@ -71,7 +69,7 @@ export const ModalGroupInfo = ({
           fontWeight: 'bold',
         }}
       >
-        Semi Design New Features
+        Research Group Information
       </h3>
       <List
         dataSource={data}

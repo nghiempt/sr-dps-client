@@ -1,41 +1,58 @@
-import {Button, Modal} from '@douyinfe/semi-ui';
+import {IconArrowUp} from '@douyinfe/semi-icons';
+import {Descriptions, Modal, Tag} from '@douyinfe/semi-ui';
 
 export const ModalException = ({
-  visible,
+  isVisible,
   handleCancel,
 }: {
-  visible: any;
+  isVisible: any;
   handleCancel: any;
 }) => {
+  const data = [
+    {key: 'Actual Users', value: '1,480,000'},
+    {
+      key: '7-day Rentention',
+      value: (
+        <span>
+          98%
+          <IconArrowUp size="small" style={{color: 'red', marginLeft: '4px'}} />
+        </span>
+      ),
+    },
+  ];
+
+  const data2 = [
+    {key: 'Actual Users', value: '1,480,000'},
+    {key: '7-day Rentention', value: '98%'},
+    {key: 'Security Level', value: 'III'},
+    {key: 'Category Tag', value: <Tag style={{margin: 0}}>E-commerce</Tag>},
+    {key: 'Authorized State', value: 'Unauthorized'},
+  ];
+
   return (
     <Modal
-      title="Exception"
-      visible={visible}
+      title="Project Information"
+      visible={isVisible}
+      onOk={() => {}}
       onCancel={handleCancel}
-      closeOnEsc={true}
-      footer={
-        <div className="shrink-0 inline-flex w-full justify-between flex-col items-center gap-y-[0px] border-solid border-[#00000000] rounded-bl-[5px] rounded-br-[5px] bg-[#00000000]">
-          <div className="self-stretch shrink-0 flex w-full justify-between items-center gap-x-[0px] bg-[#00000000]">
-            <div></div>
-            <div className="flex flex-row">
-              <div className="shrink-0 inline-flex justify-center items-center gap-x-[0px] pt-[0px] pl-[12px] pr-[0px] pb-[0px]">
-                <Button className="h-[32px] bg-gray-100" type="tertiary">
-                  Cancel
-                </Button>
-              </div>
-              <div className="shrink-0 inline-flex justify-center items-center gap-x-[0px] pt-[0px] pl-[0px] pr-[0px] pb-[0px]">
-                <Button className="h-[32px] !bg-blue-500 !text-white">
-                  Submit
-                </Button>
-              </div>
-            </div>
-          </div>
-        </div>
-      }
+      centered
+      bodyStyle={{overflow: 'auto'}}
+      footer={<div className=""></div>}
     >
-      <div>
-        <h2>Exception</h2>
-      </div>
+      <Descriptions data={data2} />
+
+      <Descriptions
+        data={data}
+        row
+        size="small"
+        style={{
+          boxShadow: 'var(--semi-shadow-elevated)',
+          backgroundColor: 'var(--semi-color-bg-2)',
+          borderRadius: '4px',
+          padding: '10px',
+          marginTop: '20px',
+        }}
+      />
     </Modal>
   );
 };
