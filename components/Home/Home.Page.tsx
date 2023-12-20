@@ -21,6 +21,14 @@ export const HomePage = () => {
 
   const goToStatistical = (category: any) => {
     localStorage.setItem('category', JSON.stringify(category));
+    // localStorage.setItem(
+    //   'user',
+    //   JSON.stringify({
+    //     user_id: 1,
+    //     user_name: 'nghiempt',
+    //     user_email: 'nghiempt.dev@gmail.com',
+    //   })
+    // );
     window.location.href = `/statistical`;
   };
 
@@ -28,7 +36,6 @@ export const HomePage = () => {
     const res: any = await fetch(ApiUrl.GET_ALL_CATEGORIES);
     await res.json().then((data: any) => {
       setListCategory(data.data);
-      console.log(data.data);
     });
   };
 

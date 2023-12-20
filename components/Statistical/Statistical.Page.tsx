@@ -8,43 +8,29 @@ import FooterCustom from '../Global/Global.Footer';
 import {
   Breadcrumb,
   Button,
-  Modal,
   Progress,
+  Spin,
   Tooltip,
   Tree,
 } from '@douyinfe/semi-ui';
-import {
-  Descriptions,
-  Tag,
-  RadioGroup,
-  Radio,
-  Pagination,
-} from '@douyinfe/semi-ui';
+import {Descriptions, Tag, Pagination} from '@douyinfe/semi-ui';
 import {
   IconHome,
-  IconArticle,
   IconAppCenter,
   IconLink,
   IconClose,
   IconDuration,
   IconHash,
-  IconBolt,
-  IconStrikeThrough,
-  IconMember,
+  IconComment,
+  IconExit,
+  IconVerify,
 } from '@douyinfe/semi-icons';
-import {
-  List,
-  Typography,
-  Layout,
-  Image,
-  Divider,
-  Spin,
-} from '@douyinfe/semi-ui';
+import {Typography, Layout, Image, Divider} from '@douyinfe/semi-ui';
 import {ModalConcept} from '../Modal/Modal.Concept';
 import {ModalException} from '../Modal/Modal.Exception';
 import {ModalSignIn} from '../Modal/Modal.SignIn';
 import {ModalSignOut} from '../Modal/Modal.SignOut';
-import {renderDataSafetyContent} from '@/utils/helper';
+import {getPercentOpinion} from '@/utils/helper';
 
 export const StatisticalPage = () => {
   const {Content} = Layout;
@@ -64,6 +50,198 @@ export const StatisticalPage = () => {
   const [currentAccount, setCurrentAccount] = useState<any>({});
   const [currentApp, setCurrentApp] = useState<any>(null);
   const [dataSafetyContent, setDataSafetyContent] = useState<any>([]);
+  const [privacyPolicyContent, setPrivacyPolicyContent] = useState<any>([]);
+  const [loadingOpinion, setLoadingOpinion] = useState<boolean>(false);
+
+  const renderDataSafetyContent = [
+    {
+      label: `Data Shared
+      ${
+        dataSafetyContent?.data_shared?.length === 0
+          ? ' - No data shared with third parties'
+          : ''
+      }
+      `,
+      value: 'Data Shared',
+      key: '0',
+      children: dataSafetyContent?.data_shared?.map((item: any, index: any) => {
+        return {
+          label: (
+            <Tooltip
+              content={item?.sub_info.map((subItem: any, subIndex: any) => {
+                return (
+                  <div key={subIndex}>
+                    <p>
+                      {subItem?.optional ? '[Optional] ' : '[Non-Optional] '}
+                      {subItem?.data_type} ({subItem?.purpose})
+                    </p>
+                    {item?.sub_info?.length > 1 ? (
+                      <Divider margin={'8px'} dashed={true} />
+                    ) : null}
+                  </div>
+                );
+              })}
+              arrowPointAtCenter={false}
+              position={'topLeft'}
+            >
+              <p>
+                {index + 1}. {item?.category}
+              </p>
+            </Tooltip>
+          ),
+          value: `${index + 1}. ${item?.category}`,
+          key: `0-${index}`,
+        };
+      }),
+    },
+    {
+      label: `Data Collected
+      ${
+        dataSafetyContent?.data_shared?.length === 0
+          ? ' - No data collected'
+          : ''
+      }
+      `,
+      value: 'Data Collected',
+      key: '1',
+      children: dataSafetyContent?.data_collected?.map(
+        (item: any, index: any) => {
+          return {
+            label: (
+              <Tooltip
+                content={item?.sub_info.map((subItem: any, subIndex: any) => {
+                  return (
+                    <div key={subIndex}>
+                      <p>
+                        {subItem?.optional ? '[Optional] ' : '[Non-Optional] '}
+                        {subItem?.data_type} ({subItem?.purpose})
+                      </p>
+                      {item?.sub_info?.length > 1 ? (
+                        <Divider margin={'8px'} dashed={true} />
+                      ) : null}
+                    </div>
+                  );
+                })}
+                arrowPointAtCenter={false}
+                position={'topLeft'}
+              >
+                <p>
+                  {index + 1}. {item?.category}
+                </p>
+              </Tooltip>
+            ),
+            value: `${index + 1}. ${item?.category}`,
+            key: `1-${index}`,
+          };
+        }
+      ),
+    },
+    {
+      label: `Security Practices
+      ${
+        dataSafetyContent?.data_shared?.length === 0
+          ? ' - No information provided'
+          : ''
+      }
+      `,
+      value: 'Security Practices',
+      key: '2',
+      children: dataSafetyContent?.security_practices?.map(
+        (item: any, index: any) => {
+          return {
+            label: (
+              <Tooltip
+                content={'No information provided'}
+                arrowPointAtCenter={false}
+                position={'topLeft'}
+              >
+                <p>
+                  {index + 1}. {item?.category}
+                </p>
+              </Tooltip>
+            ),
+            value: `${index + 1}. ${item?.category}`,
+            key: `2-${index}`,
+          };
+        }
+      ),
+    },
+  ];
+
+  const renderPrivacyPolicyContent = [
+    {
+      label: 'Data Shared',
+      value: 'Data Shared',
+      key: '0',
+      children: [
+        {
+          label: (
+            <Paragraph
+              ellipsis={{
+                rows: 5,
+                showTooltip: {
+                  type: 'popover',
+                },
+              }}
+              className="text-justify"
+            >
+              {privacyPolicyContent?.data_shared}
+            </Paragraph>
+          ),
+          value: privacyPolicyContent?.data_shared,
+          key: '0-0',
+        },
+      ],
+    },
+    {
+      label: 'Data Collected',
+      value: 'Data Collected',
+      key: '1',
+      children: [
+        {
+          label: (
+            <Paragraph
+              ellipsis={{
+                rows: 5,
+                showTooltip: {
+                  type: 'popover',
+                },
+              }}
+              className="text-justify"
+            >
+              {privacyPolicyContent?.data_collected}
+            </Paragraph>
+          ),
+          value: privacyPolicyContent?.data_collected,
+          key: '1-0',
+        },
+      ],
+    },
+    {
+      label: 'Security Practices',
+      value: 'Security Practices',
+      key: '2',
+      children: [
+        {
+          label: (
+            <Paragraph
+              ellipsis={{
+                rows: 5,
+                showTooltip: {
+                  type: 'popover',
+                },
+              }}
+              className="text-justify"
+            >
+              {privacyPolicyContent?.security_practices}
+            </Paragraph>
+          ),
+          value: privacyPolicyContent?.security_practices,
+          key: '2-0',
+        },
+      ],
+    },
+  ];
 
   const handleShowModalConcept = () => {
     setIsVisibleModalConcept(!isVisibleModalConcept);
@@ -81,133 +259,11 @@ export const StatisticalPage = () => {
     setIsVisibleModalSignOut(!isVisibleModalSignOut);
   };
 
-  const dataSafetyContent2 = [
-    {
-      label: 'Data Shared',
-      value: 'Data Shared',
-      key: '0',
-      children: [
-        {
-          label: (
-            <Tooltip
-              content={'example'}
-              arrowPointAtCenter={false}
-              position={'topLeft'}
-            >
-              <p>Device or other IDs</p>
-            </Tooltip>
-          ),
-          value: 'Device or other IDs',
-          key: '0-0',
-        },
-      ],
-    },
-    {
-      label: 'Data Collected',
-      value: 'Data Collected',
-      key: '1',
-      children: [
-        {
-          label: (
-            <Tooltip
-              content={'example'}
-              arrowPointAtCenter={false}
-              position={'topLeft'}
-            >
-              <p>App activity</p>
-            </Tooltip>
-          ),
-          value: 'App activity',
-          key: '1-0',
-        },
-      ],
-    },
-    {
-      label: 'Security Practices',
-      value: 'Security Practices',
-      key: '2',
-      children: [
-        {
-          label: (
-            <Tooltip
-              content={'example'}
-              arrowPointAtCenter={false}
-              position={'topLeft'}
-            >
-              <p>Data is encrypted in transit</p>
-            </Tooltip>
-          ),
-          value: 'Data is encrypted in transit',
-          key: '2-0',
-        },
-      ],
-    },
-  ];
-
-  const privacyPolicyContent = [
-    {
-      label: 'Data Shared',
-      value: 'Data Shared',
-      key: '0',
-      children: [
-        {
-          label:
-            'When you download, access, and use the App, it may use technology to automatically collect Usage Details, Device Information, Stored Information and Files, and Location Information. The app also collects information about the location of your device to tailor your user experience.',
-          value:
-            'When you download, access, and use the App, it may use technology to automatically collect Usage Details, Device Information, Stored Information and Files, and Location Information. The app also collects information about the location of your device to tailor your user experience.',
-          key: '0-0',
-        },
-      ],
-    },
-    {
-      label: 'Data Collected',
-      value: 'Data Collected',
-      key: '1',
-      children: [
-        {
-          label:
-            'When you download, register with, or use this App, we may ask you to provide Personal Information such as name, age, gender, postal address, email address, or telephone number. Additionally, the app automatically collects information like IP address, user name, usage patterns, and search queries. The App may also collect and use real-time information about your device’s location through the device’s privacy settings.',
-          value:
-            'When you download, register with, or use this App, we may ask you to provide Personal Information such as name, age, gender, postal address, email address, or telephone number. Additionally, the app automatically collects information like IP address, user name, usage patterns, and search queries. The App may also collect and use real-time information about your device’s location through the device’s privacy settings.',
-          key: '1-0',
-        },
-      ],
-    },
-    {
-      label: 'Security Practices',
-      value: 'Security Practices',
-      key: '2',
-      children: [
-        {
-          label: (
-            <Paragraph ellipsis={{rows: 5, showTooltip: {type: 'popover'}}}>
-              {`Unleash the power of your imagination and explore your unique
-                animation style with FlipaClip! This incredible app provides you
-                with the tools and platform to bring your ideas to life.It is a
-                great tool for beginners and aspiring animators to explore their
-                creativity and make animated videos or gifs. Whether you are
-                into whimsical storytelling, expressive characters, or
-                captivating visual effects, FlipaClip empowers you to create
-                animations that truly reflect your creative vision. Get ready to
-                unlock your imagination and embark on a journey of endless
-                possibilities.`}
-            </Paragraph>
-          ),
-          value: `Unleash the power of your imagination and explore your unique
-          animation style with FlipaClip! This incredible app provides you
-          with the tools and platform to bring your ideas to life.It is a
-          great tool for beginners and aspiring animators to explore their
-          creativity and make animated videos or gifs. Whether you are
-          into whimsical storytelling, expressive characters, or
-          captivating visual effects, FlipaClip empowers you to create
-          animations that truly reflect your creative vision. Get ready to
-          unlock your imagination and embark on a journey of endless
-          possibilities.`,
-          key: '2-0',
-        },
-      ],
-    },
-  ];
+  const handlePageChange = (page: number) => {
+    setCurrentApp(listAppInCategory[page - 1]);
+    setDataSafetyContent(listAppInCategory[page - 1].app_data_safety);
+    setPrivacyPolicyContent(listAppInCategory[page - 1].app_privacy_policy);
+  };
 
   const goToHome = () => {
     window.location.href = '/';
@@ -219,9 +275,9 @@ export const StatisticalPage = () => {
 
   const checkIsSignIn = () => {
     if (
-      currentAccount?.username === '' ||
-      currentAccount?.username === null ||
-      currentAccount?.username === undefined
+      currentAccount?.user_name === '' ||
+      currentAccount?.user_name === null ||
+      currentAccount?.user_name === undefined
     ) {
       return true;
     } else {
@@ -229,8 +285,74 @@ export const StatisticalPage = () => {
     }
   };
 
-  const assignDataSafetyContent = (data: any) => {
-    setDataSafetyContent(renderDataSafetyContent(data));
+  const clearOption = async () => {
+    setLoadingOpinion(true);
+    setCurrentApp({
+      ...currentApp,
+      score: 0,
+    });
+    const newListAppInCategory = listAppInCategory.map((item: any) => {
+      if (item.app_id === currentApp?.app_id) {
+        return {
+          ...item,
+          score: 0,
+        };
+      } else {
+        return item;
+      }
+    });
+    setListAppInCategory(newListAppInCategory);
+    const res: any = await fetch(ApiUrl.SAVE_OPINION, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify([
+        {
+          user_id: currentAccount?.user_id,
+          app_id: currentApp?.app_id,
+          score: 0,
+        },
+      ]),
+    });
+    await res.json().then((data: any) => {
+      setLoadingOpinion(false);
+    });
+  };
+
+  const saveOpition = async (option: number) => {
+    setLoadingOpinion(true);
+    setCurrentApp({
+      ...currentApp,
+      score: option,
+    });
+    const newListAppInCategory = listAppInCategory.map((item: any) => {
+      if (item.app_id === currentApp?.app_id) {
+        return {
+          ...item,
+          score: option,
+        };
+      } else {
+        return item;
+      }
+    });
+    setListAppInCategory(newListAppInCategory);
+    const res: any = await fetch(ApiUrl.SAVE_OPINION, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify([
+        {
+          user_id: currentAccount?.user_id,
+          app_id: currentApp?.app_id,
+          score: option,
+        },
+      ]),
+    });
+    await res.json().then((data: any) => {
+      setLoadingOpinion(false);
+    });
   };
 
   const init = async () => {
@@ -240,14 +362,17 @@ export const StatisticalPage = () => {
     localStorage.setItem('appOrder', JSON.stringify(0));
 
     const res: any = await fetch(
-      `${ApiUrl.GET_APP_BY_CATEGORY_ID}${JSON.parse(
+      `${ApiUrl.GET_APP_BY_CATEGORY_ID}CategoryID=${JSON.parse(
         localStorage.getItem('category') || '{}'
-      )?.category_id}`
+      )?.category_id}&UserID=${JSON.parse(localStorage.getItem('user') || '{}')
+        ?.user_id}`
     );
+
     await res.json().then((data: any) => {
       setListAppInCategory(data.data);
       setCurrentApp(data.data[0]);
-      assignDataSafetyContent(data.data[0]);
+      setDataSafetyContent(data.data[0].app_data_safety);
+      setPrivacyPolicyContent(data.data[0].app_privacy_policy);
     });
   };
 
@@ -255,7 +380,13 @@ export const StatisticalPage = () => {
     init();
   }, []);
 
-  useEffect(() => {}, [currentCategory, currentAccount, dataSafetyContent]);
+  useEffect(() => {}, [
+    currentCategory,
+    currentAccount,
+    dataSafetyContent,
+    currentApp,
+    listAppInCategory,
+  ]);
 
   return (
     <Layout className="w-full h-screen flex flex-col justify-center items-center pt-10">
@@ -314,11 +445,7 @@ export const StatisticalPage = () => {
                 icon={
                   <IconLink
                     className="cursor-pointer"
-                    onClick={() =>
-                      directToLink(
-                        'https://play.google.com/store/apps/datasafety?id=com.vblast.flipaclip'
-                      )
-                    }
+                    onClick={() => directToLink(currentApp?.data_safety_link)}
                   />
                 }
               >
@@ -328,8 +455,8 @@ export const StatisticalPage = () => {
               <div className="mt-[14px]"></div>
 
               <div>
-                {dataSafetyContent2.length > 0 ? (
-                  <Tree treeData={dataSafetyContent2} defaultExpandAll />
+                {renderDataSafetyContent.length > 0 ? (
+                  <Tree treeData={renderDataSafetyContent} defaultExpandAll />
                 ) : null}
               </div>
             </div>
@@ -342,9 +469,7 @@ export const StatisticalPage = () => {
                   <IconLink
                     className="cursor-pointer"
                     onClick={() =>
-                      directToLink(
-                        'https://play.google.com/store/apps/datasafety?id=com.vblast.flipaclip'
-                      )
+                      directToLink(currentApp?.privacy_policy_link)
                     }
                   />
                 }
@@ -355,7 +480,12 @@ export const StatisticalPage = () => {
               <div className="mt-[14px]"></div>
 
               <div className="">
-                <Tree treeData={privacyPolicyContent} defaultExpandAll />
+                {renderPrivacyPolicyContent.length > 0 ? (
+                  <Tree
+                    treeData={renderPrivacyPolicyContent}
+                    defaultExpandAll
+                  />
+                ) : null}
               </div>
             </div>
           </div>
@@ -370,9 +500,7 @@ export const StatisticalPage = () => {
             {checkIsSignIn() ? (
               <Button
                 className="bg-gray-100 border border-gray-300 text-gray-700 hover:bg-gray-200 rounded-[30px] mt-1"
-                icon={
-                  <Image src="/logo.png" alt="logo" width={14} height={14} />
-                }
+                icon={<IconVerify />}
                 theme="light"
                 type="tertiary"
                 onClick={handleShowModalSignIn}
@@ -387,23 +515,23 @@ export const StatisticalPage = () => {
                       key: 'Username',
                       value: (
                         <Tag style={{margin: 0}}>
-                          {currentAccount?.username}
+                          {currentAccount?.user_name}
                         </Tag>
                       ),
                     },
                     {
                       key: 'Email',
                       value: (
-                        <Tag style={{margin: 0}}>{currentAccount?.email}</Tag>
+                        <Tag style={{margin: 0}}>
+                          {currentAccount?.user_email}
+                        </Tag>
                       ),
                     },
                   ]}
                 />
                 <Button
                   className="bg-gray-100 border border-gray-300 text-gray-700 hover:bg-gray-200 rounded-[30px] mt-1"
-                  icon={
-                    <Image src="/logo.png" alt="logo" width={14} height={14} />
-                  }
+                  icon={<IconExit />}
                   theme="light"
                   type="tertiary"
                   onClick={handleShowModalSignOut}
@@ -424,55 +552,158 @@ export const StatisticalPage = () => {
                 <Button
                   theme="solid"
                   type="danger"
-                  className="bg-[#f87171] w-1/3 hover:opacity-80"
+                  className={`${
+                    currentApp?.label.incorrect === 1
+                      ? 'bg-blue-500 hover:!bg-blue-400'
+                      : 'bg-gray-300 hover:!bg-gray-200'
+                  } w-1/3 hover:opacity-80`}
                   icon={<IconClose />}
                 >
-                  Incorrect
+                  <Tooltip
+                    content={currentApp?.label_description?.incorrect}
+                    arrowPointAtCenter={false}
+                    position={'topLeft'}
+                  >
+                    <p>Incorrect</p>
+                  </Tooltip>
                 </Button>
 
                 <Button
                   theme="solid"
                   type="danger"
-                  className="bg-[#4ade80] w-1/3 hover:opacity-80"
+                  className={`${
+                    currentApp?.label.incomplete === 1
+                      ? 'bg-blue-500 hover:!bg-blue-400'
+                      : 'bg-gray-300 hover:!bg-gray-200'
+                  } w-1/3 `}
                   icon={<IconDuration />}
                 >
-                  Incomplete
+                  <Tooltip
+                    content={currentApp?.label_description?.incomplete}
+                    arrowPointAtCenter={false}
+                    position={'topLeft'}
+                  >
+                    <p>Incomplete</p>
+                  </Tooltip>
                 </Button>
 
                 <Button
                   theme="solid"
                   type="danger"
-                  className="bg-[#60a5fa] w-1/3 hover:opacity-80"
+                  className={`${
+                    currentApp?.label.inconsistent === 1
+                      ? 'bg-blue-500 hover:!bg-blue-400'
+                      : 'bg-gray-300 hover:!bg-gray-200'
+                  } w-1/3 hover:opacity-80`}
                   icon={<IconHash />}
                 >
-                  Inconsistent
+                  <Tooltip
+                    content={currentApp?.label_description?.inconsistent}
+                    arrowPointAtCenter={false}
+                    position={'topLeft'}
+                  >
+                    <p>Inconsistent</p>
+                  </Tooltip>
                 </Button>
               </div>
             </div>
 
             <div className="mt-6">
-              <Title heading={4}>Provide your opinion</Title>
+              <div className="flex flex-row items-center">
+                <Title heading={4} className="mr-2">
+                  Provide your opinion
+                </Title>
+                {loadingOpinion ? <Spin /> : null}
+              </div>
               <Divider margin={'8px'} />
               <div className="mt-[14px]"></div>
-              <RadioGroup
-                direction="vertical"
-                aria-label="RadioGroup demo"
-                name="demo-radio-group-vertical"
-              >
-                <Radio value={1}>
-                  <div className="flex">
-                    <Text className="text-sm mr-2">Totally agree</Text>
-                    {/* <Spin /> */}
-                    <Text className="text-sm" code>
-                      saved
-                    </Text>
-                  </div>
-                </Radio>
-                <Radio value={2}>Agree</Radio>
-                <Radio value={3}>Neutral</Radio>
-                <Radio value={4}>Disagree</Radio>
-                <Radio value={5}>Totally disagree</Radio>
-              </RadioGroup>
+
+              <div>
+                <div
+                  className="flex flex-row items-center cursor-pointer mb-2"
+                  onClick={() => {
+                    saveOpition(1);
+                  }}
+                >
+                  <div
+                    className={`w-[15px] h-[15px] border ${
+                      currentApp?.score === 1
+                        ? 'border-[5px] border-blue-500'
+                        : 'border border-gray-500'
+                    } rounded-[20px] mr-2`}
+                  ></div>
+                  <Text className="text-md mr-2">Totally Agree</Text>
+                  {currentApp?.score === 1 ? <Text code>saved</Text> : null}
+                </div>
+
+                <div
+                  className="flex flex-row items-center cursor-pointer mb-2"
+                  onClick={() => {
+                    saveOpition(2);
+                  }}
+                >
+                  <div
+                    className={`w-[15px] h-[15px] border ${
+                      currentApp?.score === 2
+                        ? 'border-[5px] border-blue-500'
+                        : 'border border-gray-500'
+                    } rounded-[20px] mr-2`}
+                  ></div>
+                  <Text className="text-md mr-2">Agree</Text>
+                  {currentApp?.score === 2 ? <Text code>saved</Text> : null}
+                </div>
+
+                <div
+                  className="flex flex-row items-center cursor-pointer mb-2"
+                  onClick={() => {
+                    saveOpition(3);
+                  }}
+                >
+                  <div
+                    className={`w-[15px] h-[15px] border ${
+                      currentApp?.score === 3
+                        ? 'border-[5px] border-blue-500'
+                        : 'border border-gray-500'
+                    } rounded-[20px] mr-2`}
+                  ></div>
+                  <Text className="text-md mr-2">Neutral</Text>
+                  {currentApp?.score === 3 ? <Text code>saved</Text> : null}
+                </div>
+
+                <div
+                  className="flex flex-row items-center cursor-pointer mb-2"
+                  onClick={() => {
+                    saveOpition(4);
+                  }}
+                >
+                  <div
+                    className={`w-[15px] h-[15px] border ${
+                      currentApp?.score === 4
+                        ? 'border-[5px] border-blue-500'
+                        : 'border border-gray-500'
+                    } rounded-[20px] mr-2`}
+                  ></div>
+                  <Text className="text-md mr-2">Disagree</Text>
+                  {currentApp?.score === 4 ? <Text code>saved</Text> : null}
+                </div>
+
+                <div
+                  className="flex flex-row items-center cursor-pointer mb-2"
+                  onClick={() => {
+                    saveOpition(5);
+                  }}
+                >
+                  <div
+                    className={`w-[15px] h-[15px] border ${
+                      currentApp?.score === 5
+                        ? 'border-[5px] border-blue-500'
+                        : 'border border-gray-500'
+                    } rounded-[20px] mr-2`}
+                  ></div>
+                  <Text className="text-md mr-2">Totally Disagree</Text>
+                  {currentApp?.score === 5 ? <Text code>saved</Text> : null}
+                </div>
+              </div>
 
               <div
                 className={`flex flex-row justify-between mt-6 ${
@@ -486,7 +717,7 @@ export const StatisticalPage = () => {
                         ? ''
                         : 'bg-gray-100 w-[80px] mr-2 !text-gray-700 hover:bg-gray-200 cursor-pointer'
                     }`}
-                    disabled
+                    onClick={clearOption}
                   >
                     Clear
                   </Button>
@@ -501,18 +732,17 @@ export const StatisticalPage = () => {
                     Clear All
                   </Button>
                 </div>
-                <Pagination
-                  total={
-                    JSON.parse(localStorage.getItem('category') || '{}')
-                      ?.total_app * 10 || 10
-                  }
-                  size="small"
-                  disabled={checkIsSignIn() ? true : false}
-                  hoverShowPageSelect
-                  onPageChange={(page) => {
-                    setCurrentApp(listAppInCategory[page - 1]);
-                  }}
-                ></Pagination>
+                {listAppInCategory?.length > 0 ? (
+                  <Pagination
+                    total={listAppInCategory?.length * 10 || 10}
+                    size="small"
+                    disabled={checkIsSignIn() ? true : false}
+                    hoverShowPageSelect
+                    onPageChange={(page) => {
+                      handlePageChange(page);
+                    }}
+                  />
+                ) : null}
               </div>
 
               {checkIsSignIn() ? (
@@ -524,7 +754,7 @@ export const StatisticalPage = () => {
               ) : null}
 
               <Progress
-                percent={0}
+                percent={Number(getPercentOpinion(listAppInCategory)) || 0}
                 stroke={[
                   {percent: 0, color: 'rgb(249, 57, 32)'},
                   {percent: 50, color: '#46259E'},
@@ -546,7 +776,7 @@ export const StatisticalPage = () => {
               <Title heading={5} className="!text-gray-700">
                 See description of concepts
               </Title>
-              <IconMember className="ml-2" />
+              <IconComment className="ml-2" />
             </div>
             <Divider margin={'10px'} />
             <div
@@ -556,7 +786,7 @@ export const StatisticalPage = () => {
               <Title heading={5} className="!text-gray-700">
                 See exceptions provided by Google
               </Title>
-              <IconStrikeThrough className="ml-2" />
+              <IconComment className="ml-2" />
             </div>
           </div>
         </div>

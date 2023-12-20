@@ -11,8 +11,9 @@ export const ModalSignOut = ({
     localStorage.setItem(
       'user',
       JSON.stringify({
-        username: '',
-        email: '',
+        user_id: 0,
+        user_name: '',
+        user_email: '',
       })
     );
     window.location.href = `/`;
@@ -35,7 +36,10 @@ export const ModalSignOut = ({
                 </Button>
               </div>
               <div className="shrink-0 inline-flex justify-center items-center gap-x-[0px] pt-[0px] pl-[0px] pr-[0px] pb-[0px]">
-                <Button className="h-[32px] !bg-blue-500 !text-white" onClick={signOut}>
+                <Button
+                  className="h-[32px] !bg-blue-500 !text-white"
+                  onClick={signOut}
+                >
                   Confirm
                 </Button>
               </div>

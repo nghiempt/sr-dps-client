@@ -2,6 +2,7 @@ import {Button, Modal} from '@douyinfe/semi-ui';
 import {useState} from 'react';
 import {Form} from '@douyinfe/semi-ui';
 import {IconMailStroked1, IconUser} from '@douyinfe/semi-icons';
+import {ApiUrl} from '@/utils/apiUrl';
 
 export const ModalSignIn = ({
   isVisible,
@@ -18,16 +19,22 @@ export const ModalSignIn = ({
 
   const submit = async () => {
     setLoading(true);
-    localStorage.setItem(
-      'user',
-      JSON.stringify({
-        username,
-        email,
-      })
-    );
-    setLoading(false);
-    handleCancel();
-    window.location.href = `/statistical`;
+    const res: any = await fetch(ApiUrl.SAVE_USER, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        user_name: username,
+        user_email: email,
+      }),
+    });
+    await res.json().then((data: any) => {
+      localStorage.setItem('user', JSON.stringify(data?.data));
+      setLoading(false);
+      handleCancel();
+      window.location.href = `/statistical`;
+    });
   };
 
   return (
