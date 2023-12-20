@@ -1,28 +1,24 @@
 import {IconAlertTriangle} from '@douyinfe/semi-icons';
 import {Button, Modal} from '@douyinfe/semi-ui';
 
-export const ModalSignOut = ({
+export const ModalClearAll = ({
   isVisible,
   handleCancel,
+  clearAllOption,
 }: {
   isVisible: any;
   handleCancel: any;
+  clearAllOption: any;
 }) => {
-  const signOut = async () => {
-    localStorage.setItem(
-      'user',
-      JSON.stringify({
-        user_id: 0,
-        user_name: '',
-        user_email: '', 
-      })
-    );
-    window.location.href = `/`;
+  const submit = async () => {
+    clearAllOption();
+    handleCancel();
+    window.location.href = `/statistical`;
   };
 
   return (
     <Modal
-      title="Confirm Sign Out"
+      title="Confirm Clear All"
       visible={isVisible}
       onOk={() => {}}
       onCancel={handleCancel}
@@ -45,7 +41,7 @@ export const ModalSignOut = ({
               <div className="shrink-0 inline-flex justify-center items-center gap-x-[0px] pt-[0px] pl-[0px] pr-[0px] pb-[0px]">
                 <Button
                   className="h-[32px] !bg-[rgb(231,75,51)] !text-white hover:!opacity-80 hover:!text-white"
-                  onClick={signOut}
+                  onClick={submit}
                 >
                   Confirm
                 </Button>
@@ -55,7 +51,7 @@ export const ModalSignOut = ({
         </div>
       }
     >
-      <p>Do you really want to SIGN OUT ?</p>
+      <p>Do you really want to CLEAR ALL your opinions ?</p>
     </Modal>
   );
 };

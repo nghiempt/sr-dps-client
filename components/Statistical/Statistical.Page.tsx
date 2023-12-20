@@ -23,7 +23,7 @@ import {
   IconHash,
   IconComment,
   IconExit,
-  IconVerify,
+  IconLock,
 } from '@douyinfe/semi-icons';
 import {Typography, Layout, Image, Divider} from '@douyinfe/semi-ui';
 import {ModalConcept} from '../Modal/Modal.Concept';
@@ -31,6 +31,8 @@ import {ModalException} from '../Modal/Modal.Exception';
 import {ModalSignIn} from '../Modal/Modal.SignIn';
 import {ModalSignOut} from '../Modal/Modal.SignOut';
 import {getPercentOpinion} from '@/utils/helper';
+import {showToastFail} from '@/utils/showToast';
+import {ModalClearAll} from '../Modal/Modal.ClearAll';
 
 export const StatisticalPage = () => {
   const {Content} = Layout;
@@ -44,6 +46,8 @@ export const StatisticalPage = () => {
     useState<boolean>(false);
   const [isVisibleModalSignOut, setIsVisibleModalSignOut] =
     useState<boolean>(false);
+  const [isVisibleModalClearAll, setIsVisibleModalClearAll] =
+    useState<boolean>(false);
 
   const [listAppInCategory, setListAppInCategory] = useState<any>([]);
   const [currentCategory, setCurrentCategory] = useState<any>({});
@@ -52,6 +56,7 @@ export const StatisticalPage = () => {
   const [dataSafetyContent, setDataSafetyContent] = useState<any>([]);
   const [privacyPolicyContent, setPrivacyPolicyContent] = useState<any>([]);
   const [loadingOpinion, setLoadingOpinion] = useState<boolean>(false);
+  const [percentOpinion, setPercentOpinion] = useState<number>(0);
 
   const renderDataSafetyContent = [
     {
@@ -181,9 +186,11 @@ export const StatisticalPage = () => {
                 rows: 5,
                 showTooltip: {
                   type: 'popover',
+                  opts: {
+                    style: {backgroundColor: 'rgb(66,70,76)', color: 'white'},
+                  },
                 },
               }}
-              className="text-justify"
             >
               {privacyPolicyContent?.data_shared}
             </Paragraph>
@@ -205,9 +212,11 @@ export const StatisticalPage = () => {
                 rows: 5,
                 showTooltip: {
                   type: 'popover',
+                  opts: {
+                    style: {backgroundColor: 'rgb(66,70,76)', color: 'white'},
+                  },
                 },
               }}
-              className="text-justify"
             >
               {privacyPolicyContent?.data_collected}
             </Paragraph>
@@ -229,9 +238,11 @@ export const StatisticalPage = () => {
                 rows: 5,
                 showTooltip: {
                   type: 'popover',
+                  opts: {
+                    style: {backgroundColor: 'rgb(66,70,76)', color: 'white'},
+                  },
                 },
               }}
-              className="text-justify"
             >
               {privacyPolicyContent?.security_practices}
             </Paragraph>
@@ -257,6 +268,10 @@ export const StatisticalPage = () => {
 
   const handleShowModalSignOut = () => {
     setIsVisibleModalSignOut(!isVisibleModalSignOut);
+  };
+
+  const handleShowModalClearAll = () => {
+    setIsVisibleModalClearAll(!isVisibleModalClearAll);
   };
 
   const handlePageChange = (page: number) => {
@@ -286,6 +301,7 @@ export const StatisticalPage = () => {
   };
 
   const clearOption = async () => {
+    console.log('clear');
     setLoadingOpinion(true);
     setCurrentApp({
       ...currentApp,
@@ -302,6 +318,7 @@ export const StatisticalPage = () => {
       }
     });
     setListAppInCategory(newListAppInCategory);
+    setPercentOpinion(Number(getPercentOpinion(newListAppInCategory)));
     const res: any = await fetch(ApiUrl.SAVE_OPINION, {
       method: 'POST',
       headers: {
@@ -337,6 +354,7 @@ export const StatisticalPage = () => {
       }
     });
     setListAppInCategory(newListAppInCategory);
+    setPercentOpinion(Number(getPercentOpinion(newListAppInCategory)));
     const res: any = await fetch(ApiUrl.SAVE_OPINION, {
       method: 'POST',
       headers: {
@@ -355,25 +373,71 @@ export const StatisticalPage = () => {
     });
   };
 
+  const clearAllOption = async () => {
+    setLoadingOpinion(true);
+    setCurrentApp({
+      ...currentApp,
+      score: 0,
+    });
+    const newListAppInCategory = listAppInCategory.map((item: any) => {
+      return {
+        ...item,
+        score: 0,
+      };
+    });
+    setListAppInCategory(newListAppInCategory);
+    setPercentOpinion(Number(getPercentOpinion(newListAppInCategory)));
+    const res: any = await fetch(
+      `${ApiUrl.CLEAR_ALL_OPINION}userid=${currentAccount?.user_id}&categoyid=${currentCategory?.category_id}`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+    await res.json().then((data: any) => {
+      setLoadingOpinion(false);
+      console.log(data);
+    });
+  };
+
   const init = async () => {
     setCurrentCategory(JSON.parse(localStorage.getItem('category') || '{}'));
     setCurrentAccount(JSON.parse(localStorage.getItem('user') || '{}'));
 
     localStorage.setItem('appOrder', JSON.stringify(0));
 
-    const res: any = await fetch(
-      `${ApiUrl.GET_APP_BY_CATEGORY_ID}CategoryID=${JSON.parse(
-        localStorage.getItem('category') || '{}'
-      )?.category_id}&UserID=${JSON.parse(localStorage.getItem('user') || '{}')
-        ?.user_id}`
-    );
+    if (localStorage.getItem('user') !== '') {
+      const res: any = await fetch(
+        `${ApiUrl.GET_APP_BY_CATEGORY_ID_USER_ID}categoryid=${JSON.parse(
+          localStorage.getItem('category') || '{}'
+        )?.category_id}&userid=${JSON.parse(
+          localStorage.getItem('user') || '{"user_id": 999}'
+        )?.user_id}`
+      );
 
-    await res.json().then((data: any) => {
-      setListAppInCategory(data.data);
-      setCurrentApp(data.data[0]);
-      setDataSafetyContent(data.data[0].app_data_safety);
-      setPrivacyPolicyContent(data.data[0].app_privacy_policy);
-    });
+      await res.json().then((data: any) => {
+        setListAppInCategory(data.data);
+        setCurrentApp(data.data[0]);
+        setDataSafetyContent(data.data[0].app_data_safety);
+        setPrivacyPolicyContent(data.data[0].app_privacy_policy);
+        setPercentOpinion(Number(getPercentOpinion(data.data)));
+      });
+    } else {
+      const res: any = await fetch(
+        `${ApiUrl.GET_APP_BY_CATEGORY_ID}id=${JSON.parse(
+          localStorage.getItem('category') || '{}'
+        )?.category_id}`
+      );
+
+      await res.json().then((data: any) => {
+        setListAppInCategory(data.data);
+        setCurrentApp(data.data[0]);
+        setDataSafetyContent(data.data[0].app_data_safety);
+        setPrivacyPolicyContent(data.data[0].app_privacy_policy);
+      });
+    }
   };
 
   useEffect(() => {
@@ -386,6 +450,7 @@ export const StatisticalPage = () => {
     dataSafetyContent,
     currentApp,
     listAppInCategory,
+    percentOpinion,
   ]);
 
   return (
@@ -424,7 +489,21 @@ export const StatisticalPage = () => {
             </div>
             <div className="text-justify w-3/5">
               <Tooltip
-                content={<Text className="!text-white">Data Safety Link</Text>}
+                content={
+                  <div
+                    className="flex flex-row items-center cursor-pointer"
+                    onClick={() =>
+                      directToLink(
+                        `https://play.google.com/store/apps/details?id=${currentApp?.app_package_name}&hl=en&gl=US`
+                      )
+                    }
+                  >
+                    <IconLink />
+                    <Text className="!text-white ml-2 font-bold">
+                      Google Play Store
+                    </Text>
+                  </div>
+                }
                 arrowPointAtCenter={false}
                 position={'topLeft'}
               >
@@ -438,7 +517,7 @@ export const StatisticalPage = () => {
           </div>
 
           <div className="flex flex-row mt-6 gap-x-6">
-            <div className="w-1/2 h-[600px] border border-gray-500 rounded-[10px] p-4">
+            <div className="w-1/2 h-[600px] border border-gray-500 rounded-[10px] p-4 overflow-y-auto">
               <Text
                 strong
                 className="text-lg"
@@ -500,7 +579,7 @@ export const StatisticalPage = () => {
             {checkIsSignIn() ? (
               <Button
                 className="bg-gray-100 border border-gray-300 text-gray-700 hover:bg-gray-200 rounded-[30px] mt-1"
-                icon={<IconVerify />}
+                icon={<IconLock />}
                 theme="light"
                 type="tertiary"
                 onClick={handleShowModalSignIn}
@@ -622,7 +701,9 @@ export const StatisticalPage = () => {
                 <div
                   className="flex flex-row items-center cursor-pointer mb-2"
                   onClick={() => {
-                    saveOpition(1);
+                    checkIsSignIn()
+                      ? showToastFail('Plase sign-in to continue !', 2000)
+                      : saveOpition(1);
                   }}
                 >
                   <div
@@ -639,7 +720,9 @@ export const StatisticalPage = () => {
                 <div
                   className="flex flex-row items-center cursor-pointer mb-2"
                   onClick={() => {
-                    saveOpition(2);
+                    checkIsSignIn()
+                      ? showToastFail('Plase sign-in to continue !', 2000)
+                      : saveOpition(2);
                   }}
                 >
                   <div
@@ -656,7 +739,9 @@ export const StatisticalPage = () => {
                 <div
                   className="flex flex-row items-center cursor-pointer mb-2"
                   onClick={() => {
-                    saveOpition(3);
+                    checkIsSignIn()
+                      ? showToastFail('Plase sign-in to continue !', 2000)
+                      : saveOpition(3);
                   }}
                 >
                   <div
@@ -673,7 +758,9 @@ export const StatisticalPage = () => {
                 <div
                   className="flex flex-row items-center cursor-pointer mb-2"
                   onClick={() => {
-                    saveOpition(4);
+                    checkIsSignIn()
+                      ? showToastFail('Plase sign-in to continue !', 2000)
+                      : saveOpition(4);
                   }}
                 >
                   <div
@@ -690,7 +777,9 @@ export const StatisticalPage = () => {
                 <div
                   className="flex flex-row items-center cursor-pointer mb-2"
                   onClick={() => {
-                    saveOpition(5);
+                    checkIsSignIn()
+                      ? showToastFail('Plase sign-in to continue !', 2000)
+                      : saveOpition(5);
                   }}
                 >
                   <div
@@ -710,28 +799,32 @@ export const StatisticalPage = () => {
                   checkIsSignIn() ? 'mb-2' : 'mb-6'
                 }`}
               >
-                <div className="flex flex-row">
-                  <Button
-                    className={`${
-                      checkIsSignIn()
-                        ? ''
-                        : 'bg-gray-100 w-[80px] mr-2 !text-gray-700 hover:bg-gray-200 cursor-pointer'
-                    }`}
-                    onClick={clearOption}
-                  >
-                    Clear
-                  </Button>
-                  <Button
-                    className={`${
-                      checkIsSignIn()
-                        ? ''
-                        : 'bg-gray-100 w-[80px] !text-red-500 hover:bg-gray-200 cursor-pointer'
-                    }`}
-                    disabled
-                  >
-                    Clear All
-                  </Button>
-                </div>
+                {!checkIsSignIn() ? (
+                  <div className="flex flex-row">
+                    <Button
+                      className={`${
+                        checkIsSignIn()
+                          ? ''
+                          : 'bg-gray-100 w-[80px] mr-2 !text-gray-700 hover:bg-gray-200 cursor-pointer'
+                      }`}
+                      onClick={clearOption}
+                    >
+                      Clear
+                    </Button>
+                    <Button
+                      className={`${
+                        checkIsSignIn()
+                          ? ''
+                          : 'bg-gray-100 w-[80px] !text-red-500 hover:bg-gray-200 cursor-pointer'
+                      }`}
+                      onClick={handleShowModalClearAll}
+                    >
+                      Clear All
+                    </Button>
+                  </div>
+                ) : (
+                  <div></div>
+                )}
                 {listAppInCategory?.length > 0 ? (
                   <Pagination
                     total={listAppInCategory?.length * 10 || 10}
@@ -754,7 +847,7 @@ export const StatisticalPage = () => {
               ) : null}
 
               <Progress
-                percent={Number(getPercentOpinion(listAppInCategory)) || 0}
+                percent={percentOpinion}
                 stroke={[
                   {percent: 0, color: 'rgb(249, 57, 32)'},
                   {percent: 50, color: '#46259E'},
@@ -810,6 +903,12 @@ export const StatisticalPage = () => {
       <ModalSignOut
         isVisible={isVisibleModalSignOut}
         handleCancel={handleShowModalSignOut}
+      />
+
+      <ModalClearAll
+        isVisible={isVisibleModalClearAll}
+        handleCancel={handleShowModalClearAll}
+        clearAllOption={clearAllOption}
       />
 
       <FooterCustom />

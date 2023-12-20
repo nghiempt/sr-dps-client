@@ -1,57 +1,79 @@
-import {IconArrowUp} from '@douyinfe/semi-icons';
-import {Descriptions, Modal, Tag} from '@douyinfe/semi-ui';
+import {IconMinusCircle, IconTickCircle} from '@douyinfe/semi-icons';
+import {Button, List, Modal} from '@douyinfe/semi-ui';
 
 export const ModalProjectInfo = ({
   isVisible,
   handleCancel,
+  projectInfo,
 }: {
   isVisible: any;
   handleCancel: any;
+  projectInfo: any;
 }) => {
   const data = [
-    {key: 'Actual Users', value: '1,480,000'},
     {
-      key: '7-day Rentention',
-      value: (
-        <span>
-          98%
-          <IconArrowUp size="small" style={{color: 'red', marginLeft: '4px'}} />
-        </span>
-      ),
+      icon: <IconTickCircle style={{fontSize: 40}} />,
+      title: projectInfo?.info_1,
+      content: projectInfo?.sub_info_1,
     },
-  ];
-
-  const data2 = [
-    {key: 'Actual Users', value: '1,480,000'},
-    {key: '7-day Rentention', value: '98%'},
-    {key: 'Security Level', value: 'III'},
-    {key: 'Category Tag', value: <Tag style={{margin: 0}}>E-commerce</Tag>},
-    {key: 'Authorized State', value: 'Unauthorized'},
+    {
+      icon: <IconMinusCircle style={{fontSize: 40}} />,
+      title: projectInfo?.info_2,
+      content: projectInfo?.sub_info_2,
+    },
   ];
 
   return (
     <Modal
-      title="Project Information"
+      header={null}
       visible={isVisible}
       onOk={() => {}}
       onCancel={handleCancel}
       centered
-      bodyStyle={{overflow: 'auto'}}
-      footer={<div className=""></div>}
+      footer={
+        <div style={{textAlign: 'center'}}>
+          <Button
+            className="h-[32px] bg-gray-100 !text-gray-700"
+            style={{
+              width: 240,
+              margin: '4px 50px',
+            }}
+            onClick={handleCancel}
+          >
+            Close
+          </Button>
+        </div>
+      }
     >
-      <Descriptions data={data2} />
-
-      <Descriptions
-        data={data}
-        row
-        size="small"
+      <h3
         style={{
-          boxShadow: 'var(--semi-shadow-elevated)',
-          backgroundColor: 'var(--semi-color-bg-2)',
-          borderRadius: '4px',
-          padding: '10px',
-          marginTop: '20px',
+          textAlign: 'center',
+          fontSize: 24,
+          margin: 40,
+          fontWeight: 'bold',
         }}
+      >
+        Project Information
+      </h3>
+      <List
+        dataSource={data}
+        split={false}
+        renderItem={(item) => (
+          <List.Item
+            header={item.icon}
+            main={
+              <div>
+                <h6
+                  style={{margin: 0, fontSize: 16, fontWeight: 'bold'}}
+                  className="text-justify"
+                >
+                  {item.title.toString().substring(0, 100)} ...
+                </h6>
+                <p className="text-justify">{item.content}</p>
+              </div>
+            }
+          />
+        )}
       />
     </Modal>
   );

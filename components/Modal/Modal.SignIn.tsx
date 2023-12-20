@@ -1,8 +1,9 @@
 import {Button, Modal} from '@douyinfe/semi-ui';
 import {useState} from 'react';
 import {Form} from '@douyinfe/semi-ui';
-import {IconMailStroked1, IconUser} from '@douyinfe/semi-icons';
+import {IconMailStroked1, IconUser, IconVerify} from '@douyinfe/semi-icons';
 import {ApiUrl} from '@/utils/apiUrl';
+import {showToastFail} from '@/utils/showToast';
 
 export const ModalSignIn = ({
   isVisible,
@@ -11,7 +12,6 @@ export const ModalSignIn = ({
   isVisible: any;
   handleCancel: any;
 }) => {
-  const [username, setUsername] = useState<any>('');
   const [email, setEmail] = useState<any>('');
   const [loading, setLoading] = useState<any>(false);
 
@@ -19,21 +19,25 @@ export const ModalSignIn = ({
 
   const submit = async () => {
     setLoading(true);
-    const res: any = await fetch(ApiUrl.SAVE_USER, {
+    const res: any = await fetch(ApiUrl.SIGN_IN, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        user_name: username,
         user_email: email,
       }),
     });
     await res.json().then((data: any) => {
-      localStorage.setItem('user', JSON.stringify(data?.data));
-      setLoading(false);
-      handleCancel();
-      window.location.href = `/statistical`;
+      if (data?.status_code === 200) {
+        localStorage.setItem('user', JSON.stringify(data?.data));
+        setLoading(false);
+        handleCancel();
+        window.location.href = `/statistical`;
+      } else {
+        setLoading(false);
+        showToastFail('Email is not exist', 2000);
+      }
     });
   };
 
@@ -43,6 +47,12 @@ export const ModalSignIn = ({
       visible={isVisible}
       onCancel={handleCancel}
       closeOnEsc={true}
+      icon={
+        <IconVerify
+          style={{color: 'rgba(var(--semi-blue-4), 1)'}}
+          size="extra-large"
+        />
+      }
       footer={
         <div className="shrink-0 inline-flex w-full justify-between flex-col items-center gap-y-[0px] border-solid border-[#00000000] rounded-bl-[5px] rounded-br-[5px] bg-[#00000000]">
           <div className="self-stretch shrink-0 flex w-full justify-between items-center gap-x-[0px] bg-[#00000000]">
@@ -68,18 +78,6 @@ export const ModalSignIn = ({
       }
     >
       <Form>
-        <Input
-          field="Username"
-          style={{width: '100%'}}
-          placeholder={'Nghiem Thanh Pham'}
-          onChange={(e) => setUsername(e)}
-          rules={[
-            {required: true, message: 'required error'},
-            {type: 'string', message: 'type error'},
-          ]}
-          prefix={<IconUser />}
-          showClear
-        />
         <Input
           field="Email"
           style={{width: '100%'}}

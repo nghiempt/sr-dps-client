@@ -1,5 +1,7 @@
 import {Modal, Button, List} from '@douyinfe/semi-ui';
-import {IconSemiLogo} from '@douyinfe/semi-icons';
+import {IconClose, IconDuration, IconHash} from '@douyinfe/semi-icons';
+import {useEffect, useState} from 'react';
+import {ApiUrl} from '@/utils/apiUrl';
 
 export const ModalConcept = ({
   isVisible,
@@ -8,24 +10,37 @@ export const ModalConcept = ({
   isVisible: any;
   handleCancel: any;
 }) => {
+  const [listConcept, setListConcept] = useState<any>({});
+
+  const init = async () => {
+    const resGroupInfo: any = await fetch(ApiUrl.GET_CONCEPT);
+    await resGroupInfo.json().then((data: any) => {
+      setListConcept(data.data);
+      console.log(data.data);
+    });
+  };
+
+  useEffect(() => {
+    init();
+  }, []);
+
+  useEffect(() => {}, [listConcept]);
+
   const data = [
     {
-      icon: <IconSemiLogo style={{fontSize: 48}} />,
-      title: 'Sample',
-      content:
-        'Sample data is prepared for you to demostrate how Integration may be useful for your team',
+      icon: <IconDuration style={{fontSize: 40}} />,
+      title: 'Incomplete',
+      content: `${listConcept?.incomplete}`,
     },
     {
-      icon: <IconSemiLogo style={{fontSize: 48}} />,
-      title: 'Sample',
-      content:
-        'Sample data is prepared for you to demostrate how Integration may be useful for your team',
+      icon: <IconHash style={{fontSize: 40}} />,
+      title: 'Inconsistent',
+      content: `${listConcept?.inconsistent}`,
     },
     {
-      icon: <IconSemiLogo style={{fontSize: 48}} />,
-      title: 'Sample',
-      content:
-        'Sample data is prepared for you to demostrate how Integration may be useful for your team',
+      icon: <IconClose style={{fontSize: 40}} />,
+      title: 'Incorrect',
+      content: `${listConcept?.incorrect}`,
     },
   ];
 
@@ -39,24 +54,14 @@ export const ModalConcept = ({
       footer={
         <div style={{textAlign: 'center'}}>
           <Button
-            onClick={handleCancel}
-            className="h-[32px] bg-blue-500 !text-white"
-            style={{
-              width: 240,
-              margin: '4px 50px',
-            }}
-          >
-            Continue
-          </Button>
-          <Button
-            className="h-[32px] bg-gray-100"
+            className="h-[32px] bg-gray-100 !text-gray-700"
             style={{
               width: 240,
               margin: '4px 50px',
             }}
             onClick={handleCancel}
           >
-            Learn more features
+            Close
           </Button>
         </div>
       }
@@ -69,7 +74,7 @@ export const ModalConcept = ({
           fontWeight: 'bold',
         }}
       >
-        Research Group Information
+        Some Concepts Label
       </h3>
       <List
         dataSource={data}
@@ -82,7 +87,13 @@ export const ModalConcept = ({
                 <h6 style={{margin: 0, fontSize: 16, fontWeight: 'bold'}}>
                   {item.title}
                 </h6>
-                <p style={{marginTop: 4, color: 'var(--semi-color-text-1)'}}>
+                <p
+                  style={{
+                    marginTop: 4,
+                    color: 'var(--semi-color-text-1)',
+                    textAlign: 'justify',
+                  }}
+                >
                   {item.content}
                 </p>
               </div>

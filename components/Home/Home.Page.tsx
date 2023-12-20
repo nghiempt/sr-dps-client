@@ -21,14 +21,6 @@ export const HomePage = () => {
 
   const goToStatistical = (category: any) => {
     localStorage.setItem('category', JSON.stringify(category));
-    // localStorage.setItem(
-    //   'user',
-    //   JSON.stringify({
-    //     user_id: 1,
-    //     user_name: 'nghiempt',
-    //     user_email: 'nghiempt.dev@gmail.com',
-    //   })
-    // );
     window.location.href = `/statistical`;
   };
 
